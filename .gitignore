@@ -3,5 +3,5 @@ DEVIS_FR_104235_0515528010_MJC-CS.pdf
 atelier_codage_robocup_2023_mail_github.odt
 
 # Ignore Logs
-*.log
-*.doc
+**/*.log
+**/*.doc
