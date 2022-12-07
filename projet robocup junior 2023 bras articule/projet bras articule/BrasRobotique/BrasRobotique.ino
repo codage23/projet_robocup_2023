@@ -1,239 +1,314 @@
+/*        
+       DIY Arduino Robot Arm Smartphone Control  
+        by Dejan, www.HowToMechatronics.com  
+*/
+
+#include <SoftwareSerial.h>
 #include <Servo.h>
 
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-Servo servo5;
+Servo servo01;
+Servo servo02;
+Servo servo03;
+Servo servo04;
+Servo servo05;
+Servo servo06;
 
-int pinServo1 = 2;
-int pinServo2 = 3;
-int pinServo3 = 4;
-int pinServo4 = 5;
-int pinServo5 = 6;
+SoftwareSerial Bluetooth(3, 4); // Arduino(RX, TX) - HC-05 Bluetooth (TX, RX)
 
-int leftButton = 7;
-int rightButton = 8;
-
-int potentiometer1 = A0;
-int potentiometer2 = A1;
-int potentiometer3 = A2;
-
-//Record section
-int buttonStartRecord = 9;
-int buttonStopRecord = 10;
-int buttonPlayRecord = 11;
-int ledStopRecord = 12;
-int ledStartRecord = 13;
-
-bool isRecord = false;
-bool isPlay = false;
-int indexRecord = 0;
-
-const int moveCount = 10;
-const int servoNumber = 4;
-int movesServos[moveCount][servoNumber]; //max of 10 moves
-
-
-Servo servos[servoNumber] = {servo1, servo2, servo3, servo4};
-//END Record section
+int servo1Pos, servo2Pos, servo3Pos, servo4Pos, servo5Pos, servo6Pos; // current position
+int servo1PPos, servo2PPos, servo3PPos, servo4PPos, servo5PPos, servo6PPos; // previous position
+int servo01SP[50], servo02SP[50], servo03SP[50], servo04SP[50], servo05SP[50], servo06SP[50]; // for storing positions/steps
+int speedDelay = 20;
+int index = 0;
+String dataIn = "";
 
 void setup() {
-  servo1.attach(pinServo1);
-  servo2.attach(pinServo2);
-  servo3.attach(pinServo3);
-  servo4.attach(pinServo4);
-  servo5.attach(pinServo5);
-
-  clawOpen();
-
-  pinMode(leftButton, INPUT);
-  pinMode(rightButton, INPUT);
-
-  //Record section
-  pinMode(buttonStartRecord, INPUT);
-  pinMode(buttonStopRecord, INPUT);
-  pinMode(buttonPlayRecord, INPUT);
-
-  pinMode(ledStartRecord, OUTPUT);
-  pinMode(ledStopRecord, OUTPUT);
-  //END Region section
-  
-  Serial.begin(9600);
+  servo01.attach(2);
+  servo02.attach(3);
+  servo03.attach(4);
+  servo04.attach(5);
+  servo05.attach(6);
+  servo06.attach(7);
+  Bluetooth.begin(38400); // Default baud rate of the Bluetooth module
+  Bluetooth.setTimeout(1);
+  delay(20);
+  // Robot arm initial position
+  servo1PPos = 90;
+  servo01.write(servo1PPos);
+  servo2PPos = 150;
+  servo02.write(servo2PPos);
+  servo3PPos = 35;
+  servo03.write(servo3PPos);
+  servo4PPos = 140;
+  servo04.write(servo4PPos);
+  servo5PPos = 85;
+  servo05.write(servo5PPos);
+  servo6PPos = 80;
+  servo06.write(servo6PPos);
 }
 
 void loop() {
-  if (!isPlay) {
-    int valPotentiometer1 = analogRead(potentiometer1);
-    int valPotentiometer2 = analogRead(potentiometer2);
-    int valPotentiometer3 = analogRead(potentiometer3);
-
-    int valServo1 = map(valPotentiometer1, 0, 1023, 10, 170);
-    int valServo2 = map(valPotentiometer2, 0, 1023, 10, 170);
-    int valServo3 = map(valPotentiometer3, 0, 1023, 10, 170);
-
-    servo1.write(valServo1);
-    servo2.write(valServo2);
-    servo3.write(valServo3);
-
-    int leftButtonState = digitalRead(leftButton);
-    int rightButtonState = digitalRead(rightButton);
-
-    if (leftButtonState == HIGH && rightButtonState == HIGH) {
-      clawOpen();
-    } else {
-      if (leftButtonState == HIGH) {
-        clawOpen();
-      }
-      if (rightButtonState == HIGH) {
-        clawClose();
-      }
-    }
-  }
-  
-  record();
-
-  delay(5);
-}
-
-
-
-
-void record() {
-  int buttonStartRecordState =  digitalRead(buttonStartRecord);
-  int buttonRecordMoveState =  digitalRead(buttonStopRecord);
-  int buttonPlayRecordState =  digitalRead(buttonPlayRecord);
-
-  if (buttonStartRecordState == HIGH) {
-    if (!isRecord) {
-      isRecord = true;
-      digitalWrite(ledStopRecord, LOW);
-      digitalWrite(ledStartRecord, HIGH);
-      Serial.println("----START Record----");
-      indexRecord = 0;
-      memset(movesServos, 0, sizeof(movesServos));
-    } else {
-      isRecord = false;
-      digitalWrite(ledStopRecord, LOW);
-      digitalWrite(ledStartRecord, LOW);
-    }
-    delay(300);
-  }
-
-  if (buttonRecordMoveState == HIGH && isRecord) {
-    digitalWrite(ledStopRecord, LOW);
-    digitalWrite(ledStartRecord, LOW);
-    recordMove();
-    delay(300);
-    digitalWrite(ledStopRecord, LOW);
-    digitalWrite(ledStartRecord, HIGH);
-
-  } else if (buttonRecordMoveState == HIGH && isPlay) {
-    isPlay = false;
-    digitalWrite(ledStopRecord, LOW);
-    digitalWrite(ledStartRecord, LOW);
-  }
-  if (buttonPlayRecordState == HIGH) {
-
-    digitalWrite(ledStopRecord, HIGH);
-    digitalWrite(ledStartRecord, LOW);
-    isPlay = true;
-  }
-
-  if (isPlay) {
-    Serial.println("Play");
-    playRecord();
-
-    delay(300);
-  }
-}
-
-void recordMove() {
-  if (indexRecord < moveCount) {
-    int servoRead1 =  servo1.read();
-    int servoRead2 =  servo2.read();
-    int servoRead3 =  servo3.read();
-    int servoRead4 =  servo4.read();
-    int servoRead5 =  servo5.read();
-
-    movesServos[indexRecord][0] = servoRead1;
-    movesServos[indexRecord][1] = servoRead2;
-    movesServos[indexRecord][2] = servoRead3;
-
-    int servo3Value;
-    if (servo4.read() == 100 && servo5.read() == 80) {
-      servo3Value = 1;
-    } else {
-      servo3Value = 0;
-    }
-
-    movesServos[indexRecord][3] = servo3Value;
-
-    indexRecord++;
-  } else {
-    Serial.println("Max array");
-  }
-
-}
-
-void playRecord() {
-  moves();
-  goToStartPosition();
-
-  delay(1000);
-}
-
-void moves() {
-  for ( int i = 0; i < indexRecord - 1; i++) {
-    for ( int j = 0; j < servoNumber; ++j ) {
-      if (j >= 3) {
-        if (movesServos[i + 1][j] == 1) {
-          clawOpen();
-        } else {
-          clawClose();
+  // Check for incoming data
+  if (Bluetooth.available() > 0) {
+    dataIn = Bluetooth.readString();  // Read the data as string
+    
+    // If "Waist" slider has changed value - Move Servo 1 to position
+    if (dataIn.startsWith("s1")) {
+      String dataInS = dataIn.substring(2, dataIn.length()); // Extract only the number. E.g. from "s1120" to "120"
+      servo1Pos = dataInS.toInt();  // Convert the string into integer
+      // We use for loops so we can control the speed of the servo
+      // If previous position is bigger then current position
+      if (servo1PPos > servo1Pos) {
+        for ( int j = servo1PPos; j >= servo1Pos; j--) {   // Run servo down
+          servo01.write(j);
+          delay(20);    // defines the speed at which the servo rotates
         }
-      } else {
-        setServoPosition(servos[j], movesServos[i][j], movesServos[i + 1][j]);
       }
-    }
-  }
-}
-
-void goToStartPosition() {
-
-  for ( int j = 0; j < servoNumber; ++j ) {
-      if (j >= 3) {
-        if (movesServos[0][j] == 1) {
-          clawOpen();
-        } else {
-          clawClose();
+      // If previous position is smaller then current position
+      if (servo1PPos < servo1Pos) {
+        for ( int j = servo1PPos; j <= servo1Pos; j++) {   // Run servo up
+          servo01.write(j);
+          delay(20);
         }
-      } else {
-        setServoPosition(servos[j], servos[j].read(), movesServos[0][j]);
       }
+      servo1PPos = servo1Pos;   // set current position as previous position
     }
-}
+    
+    // Move Servo 2
+    if (dataIn.startsWith("s2")) {
+      String dataInS = dataIn.substring(2, dataIn.length());
+      servo2Pos = dataInS.toInt();
 
-void setServoPosition(Servo servo, int startPosition, int endPosition) {
-  if (startPosition > endPosition) {
-    for (int i = startPosition; i >= endPosition; i--) {
-      servo.write(i);
-      delay(30);
+      if (servo2PPos > servo2Pos) {
+        for ( int j = servo2PPos; j >= servo2Pos; j--) {
+          servo02.write(j);
+          delay(50);
+        }
+      }
+      if (servo2PPos < servo2Pos) {
+        for ( int j = servo2PPos; j <= servo2Pos; j++) {
+          servo02.write(j);
+          delay(50);
+        }
+      }
+      servo2PPos = servo2Pos;
     }
-  } else {
-    for (int i = startPosition; i <= endPosition; i++) {
-      servo.write(i);
-      delay(30);
+    // Move Servo 3
+    if (dataIn.startsWith("s3")) {
+      String dataInS = dataIn.substring(2, dataIn.length());
+      servo3Pos = dataInS.toInt();
+      if (servo3PPos > servo3Pos) {
+        for ( int j = servo3PPos; j >= servo3Pos; j--) {
+          servo03.write(j);
+          delay(30);
+        }
+      }
+      if (servo3PPos < servo3Pos) {
+        for ( int j = servo3PPos; j <= servo3Pos; j++) {
+          servo03.write(j);
+          delay(30);
+        }
+      }
+      servo3PPos = servo3Pos;
+    }
+    // Move Servo 4
+    if (dataIn.startsWith("s4")) {
+      String dataInS = dataIn.substring(2, dataIn.length());
+      servo4Pos = dataInS.toInt();
+      if (servo4PPos > servo4Pos) {
+        for ( int j = servo4PPos; j >= servo4Pos; j--) {
+          servo04.write(j);
+          delay(30);
+        }
+      }
+      if (servo4PPos < servo4Pos) {
+        for ( int j = servo4PPos; j <= servo4Pos; j++) {
+          servo04.write(j);
+          delay(30);
+        }
+      }
+      servo4PPos = servo4Pos;
+    }
+    // Move Servo 5
+    if (dataIn.startsWith("s5")) {
+      String dataInS = dataIn.substring(2, dataIn.length());
+      servo5Pos = dataInS.toInt();
+      if (servo5PPos > servo5Pos) {
+        for ( int j = servo5PPos; j >= servo5Pos; j--) {
+          servo05.write(j);
+          delay(30);
+        }
+      }
+      if (servo5PPos < servo5Pos) {
+        for ( int j = servo5PPos; j <= servo5Pos; j++) {
+          servo05.write(j);
+          delay(30);
+        }
+      }
+      servo5PPos = servo5Pos;
+    }
+    // Move Servo 6
+    if (dataIn.startsWith("s6")) {
+      String dataInS = dataIn.substring(2, dataIn.length());
+      servo6Pos = dataInS.toInt();
+      if (servo6PPos > servo6Pos) {
+        for ( int j = servo6PPos; j >= servo6Pos; j--) {
+          servo06.write(j);
+          delay(30);
+        }
+      }
+      if (servo6PPos < servo6Pos) {
+        for ( int j = servo6PPos; j <= servo6Pos; j++) {
+          servo06.write(j);
+          delay(30);
+        }
+      }
+      servo6PPos = servo6Pos; 
+    }
+    // If button "SAVE" is pressed
+    if (dataIn.startsWith("SAVE")) {
+      servo01SP[index] = servo1PPos;  // save position into the array
+      servo02SP[index] = servo2PPos;
+      servo03SP[index] = servo3PPos;
+      servo04SP[index] = servo4PPos;
+      servo05SP[index] = servo5PPos;
+      servo06SP[index] = servo6PPos;
+      index++;                        // Increase the array index
+    }
+    // If button "RUN" is pressed
+    if (dataIn.startsWith("RUN")) {
+      runservo();  // Automatic mode - run the saved steps 
+    }
+    // If button "RESET" is pressed
+    if ( dataIn == "RESET") {
+      memset(servo01SP, 0, sizeof(servo01SP)); // Clear the array data to 0
+      memset(servo02SP, 0, sizeof(servo02SP));
+      memset(servo03SP, 0, sizeof(servo03SP));
+      memset(servo04SP, 0, sizeof(servo04SP));
+      memset(servo05SP, 0, sizeof(servo05SP));
+      memset(servo06SP, 0, sizeof(servo06SP));
+      index = 0;  // Index to 0
     }
   }
 }
 
-void clawOpen() {
-  servo4.write(100);
-  servo5.write(80);
-}
+// Automatic mode custom function - run the saved steps
+void runservo() {
+  while (dataIn != "RESET") {   // Run the steps over and over again until "RESET" button is pressed
+    for (int i = 0; i <= index - 2; i++) {  // Run through all steps(index)
+      if (Bluetooth.available() > 0) {      // Check for incomding data
+        dataIn = Bluetooth.readString();
+        if ( dataIn == "PAUSE") {           // If button "PAUSE" is pressed
+          while (dataIn != "RUN") {         // Wait until "RUN" is pressed again
+            if (Bluetooth.available() > 0) {
+              dataIn = Bluetooth.readString();
+              if ( dataIn == "RESET") {     
+                break;
+              }
+            }
+          }
+        }
+        // If speed slider is changed
+        if (dataIn.startsWith("ss")) {
+          String dataInS = dataIn.substring(2, dataIn.length());
+          speedDelay = dataInS.toInt(); // Change servo speed (delay time)
+        }
+      }
+      // Servo 1
+      if (servo01SP[i] == servo01SP[i + 1]) {
+      }
+      if (servo01SP[i] > servo01SP[i + 1]) {
+        for ( int j = servo01SP[i]; j >= servo01SP[i + 1]; j--) {
+          servo01.write(j);
+          delay(speedDelay);
+        }
+      }
+      if (servo01SP[i] < servo01SP[i + 1]) {
+        for ( int j = servo01SP[i]; j <= servo01SP[i + 1]; j++) {
+          servo01.write(j);
+          delay(speedDelay);
+        }
+      }
 
-void clawClose() {
-  servo4.write(20);
-  servo5.write(160);
+      // Servo 2
+      if (servo02SP[i] == servo02SP[i + 1]) {
+      }
+      if (servo02SP[i] > servo02SP[i + 1]) {
+        for ( int j = servo02SP[i]; j >= servo02SP[i + 1]; j--) {
+          servo02.write(j);
+          delay(speedDelay);
+        }
+      }
+      if (servo02SP[i] < servo02SP[i + 1]) {
+        for ( int j = servo02SP[i]; j <= servo02SP[i + 1]; j++) {
+          servo02.write(j);
+          delay(speedDelay);
+        }
+      }
+
+      // Servo 3
+      if (servo03SP[i] == servo03SP[i + 1]) {
+      }
+      if (servo03SP[i] > servo03SP[i + 1]) {
+        for ( int j = servo03SP[i]; j >= servo03SP[i + 1]; j--) {
+          servo03.write(j);
+          delay(speedDelay);
+        }
+      }
+      if (servo03SP[i] < servo03SP[i + 1]) {
+        for ( int j = servo03SP[i]; j <= servo03SP[i + 1]; j++) {
+          servo03.write(j);
+          delay(speedDelay);
+        }
+      }
+
+      // Servo 4
+      if (servo04SP[i] == servo04SP[i + 1]) {
+      }
+      if (servo04SP[i] > servo04SP[i + 1]) {
+        for ( int j = servo04SP[i]; j >= servo04SP[i + 1]; j--) {
+          servo04.write(j);
+          delay(speedDelay);
+        }
+      }
+      if (servo04SP[i] < servo04SP[i + 1]) {
+        for ( int j = servo04SP[i]; j <= servo04SP[i + 1]; j++) {
+          servo04.write(j);
+          delay(speedDelay);
+        }
+      }
+
+      // Servo 5
+      if (servo05SP[i] == servo05SP[i + 1]) {
+      }
+      if (servo05SP[i] > servo05SP[i + 1]) {
+        for ( int j = servo05SP[i]; j >= servo05SP[i + 1]; j--) {
+          servo05.write(j);
+          delay(speedDelay);
+        }
+      }
+      if (servo05SP[i] < servo05SP[i + 1]) {
+        for ( int j = servo05SP[i]; j <= servo05SP[i + 1]; j++) {
+          servo05.write(j);
+          delay(speedDelay);
+        }
+      }
+
+      // Servo 6
+      if (servo06SP[i] == servo06SP[i + 1]) {
+      }
+      if (servo06SP[i] > servo06SP[i + 1]) {
+        for ( int j = servo06SP[i]; j >= servo06SP[i + 1]; j--) {
+          servo06.write(j);
+          delay(speedDelay);
+        }
+      }
+      if (servo06SP[i] < servo06SP[i + 1]) {
+        for ( int j = servo06SP[i]; j <= servo06SP[i + 1]; j++) {
+          servo06.write(j);
+          delay(speedDelay);
+        }
+      }
+    }
+  }
 }
