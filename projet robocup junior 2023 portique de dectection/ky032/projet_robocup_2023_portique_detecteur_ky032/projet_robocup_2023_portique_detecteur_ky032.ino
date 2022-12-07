@@ -1,6 +1,6 @@
 /*
 * projet robocup 2023
-* detecteur KY032
+* test detecteur KY032
 */
 int Sensor = 13;  // Declaration of the sensor input pin
 
