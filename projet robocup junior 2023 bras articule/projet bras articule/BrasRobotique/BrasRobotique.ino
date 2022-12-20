@@ -1,10 +1,12 @@
-/*        
-       DIY Arduino Robot Arm Smartphone Control  
-        by Dejan, www.HowToMechatronics.com  
+/*
+       DIY Arduino Robot Arm Smartphone Control
+        by Dejan, www.HowToMechatronics.com
 */
 
 #include <SoftwareSerial.h>
 #include <Servo.h>
+
+#define SERIAL_BAUD 9600
 
 Servo servo01;
 Servo servo02;
@@ -15,23 +17,37 @@ Servo servo06;
 
 SoftwareSerial Bluetooth(3, 4); // Arduino(RX, TX) - HC-05 Bluetooth (TX, RX)
 
-int servo1Pos, servo2Pos, servo3Pos, servo4Pos, servo5Pos, servo6Pos; // current position
-int servo1PPos, servo2PPos, servo3PPos, servo4PPos, servo5PPos, servo6PPos; // previous position
-int servo01SP[50], servo02SP[50], servo03SP[50], servo04SP[50], servo05SP[50], servo06SP[50]; // for storing positions/steps
+// current position
+int servo1Pos, servo2Pos, servo3Pos, servo4Pos, servo5Pos, servo6Pos;
+
+// previous position
+int servo1PPos, servo2PPos, servo3PPos, servo4PPos, servo5PPos, servo6PPos;
+
+// for storing positions/steps
+int servo01SP[50], servo02SP[50], servo03SP[50], servo04SP[50], servo05SP[50], servo06SP[50];
+
 int speedDelay = 20;
 int index = 0;
 String dataIn = "";
 
 void setup() {
-  servo01.attach(2);
-  servo02.attach(3);
-  servo03.attach(4);
-  servo04.attach(5);
-  servo05.attach(6);
-  servo06.attach(7);
-  Bluetooth.begin(38400); // Default baud rate of the Bluetooth module
+  Serial.begin(SERIAL_BAUD);
+
+  Serial.println();
+  Serial.print("Demarrage du bras");
+
+  servo01.attach(5);
+  servo02.attach(6);
+  servo03.attach(7);
+  servo04.attach(8);
+  servo05.attach(9);
+  servo06.attach(10);
+
+  // 38400 Default baud rate of the Bluetooth module hc05 et 9600 hc06
+  Bluetooth.begin(9600); // SoftwareSerial
   Bluetooth.setTimeout(1);
   delay(20);
+
   // Robot arm initial position
   servo1PPos = 90;
   servo01.write(servo1PPos);
@@ -50,8 +66,10 @@ void setup() {
 void loop() {
   // Check for incoming data
   if (Bluetooth.available() > 0) {
+    // Lecture du module BT et affichage des donnees sur le moniteur serie de l'Ordinateur
     dataIn = Bluetooth.readString();  // Read the data as string
-    
+    Serial.println(dataIn);
+
     // If "Waist" slider has changed value - Move Servo 1 to position
     if (dataIn.startsWith("s1")) {
       String dataInS = dataIn.substring(2, dataIn.length()); // Extract only the number. E.g. from "s1120" to "120"
@@ -73,7 +91,7 @@ void loop() {
       }
       servo1PPos = servo1Pos;   // set current position as previous position
     }
-    
+
     // Move Servo 2
     if (dataIn.startsWith("s2")) {
       String dataInS = dataIn.substring(2, dataIn.length());
@@ -163,7 +181,7 @@ void loop() {
           delay(30);
         }
       }
-      servo6PPos = servo6Pos; 
+      servo6PPos = servo6Pos;
     }
     // If button "SAVE" is pressed
     if (dataIn.startsWith("SAVE")) {
@@ -177,7 +195,7 @@ void loop() {
     }
     // If button "RUN" is pressed
     if (dataIn.startsWith("RUN")) {
-      runservo();  // Automatic mode - run the saved steps 
+      runservo();  // Automatic mode - run the saved steps
     }
     // If button "RESET" is pressed
     if ( dataIn == "RESET") {
@@ -202,7 +220,7 @@ void runservo() {
           while (dataIn != "RUN") {         // Wait until "RUN" is pressed again
             if (Bluetooth.available() > 0) {
               dataIn = Bluetooth.readString();
-              if ( dataIn == "RESET") {     
+              if ( dataIn == "RESET") {
                 break;
               }
             }
