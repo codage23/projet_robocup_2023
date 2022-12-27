@@ -5,16 +5,17 @@
 #define SerialMonitor   1
 #define debug 1  // true for use Display log message if True
 
-#define TEST  0  // if 1 true,  0 false
-#define I2C  1   // if 1 true,  0 false
+//========================================================
+// Differentes fonctions du programme
+//========================================================
+#define TEST  0        // if 1 true,  0 false
+#define I2C  0         // if 1 true,  0 false
+#define BLUETOOTH  1   // if 1 true,  0 false
 
 //==================================================================
 // Bluetooth
 // 38400 Default baud rate of the Bluetooth module hc05 et 9600 hc06
 //===================================================================
-// si presence du bluetooth
-#define BLUETOOTH  0   // if 1 true,  0 false
-
 #define SERIAL_BAUD_BLUETOOTH 9600   // vitesse du bluetooth
 
 //==========================================
@@ -26,6 +27,11 @@
 #define WRIST_ROLL 8
 #define WRIST_PITCH 9
 #define GRIPPER 10
+
+//==================================================
+// Definition de l'adresse logique de l'esclave I2C
+//==================================================
+#define I2C_SLAVE_BRAS  1
 
 //==========
 // Variables
@@ -53,8 +59,8 @@ String dataIn = "";
 // Robot arm initial position
 //===========================
 #define PP_WAIST 90
-#define PP_SHOULDER 170
-#define PP_ELBOW 60
+#define PP_SHOULDER 180
+#define PP_ELBOW 100
 #define PP_WRIST_ROLL 100
-#define PP_WRIST_PITCH 120
+#define PP_WRIST_PITCH 70
 #define PP_GRIPPER 100

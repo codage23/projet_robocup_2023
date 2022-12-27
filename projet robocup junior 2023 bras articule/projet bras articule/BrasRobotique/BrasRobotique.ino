@@ -10,6 +10,7 @@
 //=============================
 #include <SoftwareSerial.h>
 #include <Servo.h>
+#include <Wire.h> //composants utilisant le protocole I2C
 #include "variables.h"
 
 //================
@@ -66,7 +67,12 @@ void setup() {
   //Bluetooth.setTimeout(1);
   delay(20);
 #endif
-
+#if I2C and !TEST and !BLUETOOTH
+  // Initialise la library Wire et se connecte au bus I2C en tant qu'esclave
+  Wire.begin(I2C_SLAVE_BRAS);
+  // Définition de la fonction qui prendra en charge les informations recues sur le bus I2C
+  Wire.onReceive(fonctionI2C);
+#endif
 }
 
 //=====
@@ -75,7 +81,7 @@ void setup() {
 void loop() {
 
 #if I2C and !BLUETOOTH and !TEST
-  fonctionI2C ();
+  fonctionI2C();
 #endif
 
 #if TEST and !BLUETOOTH and !I2C
@@ -89,11 +95,12 @@ void loop() {
 }
 
 #if I2C and !BLUETOOTH and !TEST
-void fonctionI2C () {
-    // Check for incoming data
-    // Lecture du module I2C et affichage des donnees sur le moniteur serie de l'Ordinateur
-// *******   dataIn = I2C.readString();  // Read the data as string
- dataIn = 90;
+void fonctionI2C() {
+  // Check for incoming data
+  // Lecture du module I2C et affichage des donnees sur le moniteur serie de l'Ordinateur
+  if (Wire.available() > 0) {
+    // *******   dataIn = I2C.readString();  // Read the data as string
+    dataIn = 90;
     Serial.println(dataIn);
 
     // If "Waist" slider has changed value - Move Servo 1 to position
@@ -257,29 +264,30 @@ void fonctionI2C () {
       memset(servo06SP, 0, sizeof(servo06SP));
       index = 0;  // Index to 0
     }
+  }
 }
 
 // Automatic mode custom function - run the saved steps
 void runservo() {
   while (dataIn != "RESET") {   // Run the steps over and over again until "RESET" button is pressed
     for (int i = 0; i <= index - 2; i++) {  // Run through all steps(index)
-//*****        dataIn = I2C.readString();
-dataIn = 90;
-        if ( dataIn == "PAUSE") {           // If button "PAUSE" is pressed
-          while (dataIn != "RUN") {         // Wait until "RUN" is pressed again
-// ****             dataIn = I2C.readString();
-dataIn = 90;
-              if ( dataIn == "RESET") {
-                break;
-              }
+      //*****        dataIn = I2C.readString();
+      dataIn = 90;
+      if ( dataIn == "PAUSE") {           // If button "PAUSE" is pressed
+        while (dataIn != "RUN") {         // Wait until "RUN" is pressed again
+          // ****             dataIn = I2C.readString();
+          dataIn = 90;
+          if ( dataIn == "RESET") {
+            break;
           }
         }
-        // If speed slider is changed
-        if (dataIn.startsWith("ss")) {
-          String dataInS = dataIn.substring(2, dataIn.length());
-          speedDelay = dataInS.toInt(); // Change servo speed (delay time)
-          Serial.println(speedDelay);
-        }
+      }
+      // If speed slider is changed
+      if (dataIn.startsWith("ss")) {
+        String dataInS = dataIn.substring(2, dataIn.length());
+        speedDelay = dataInS.toInt(); // Change servo speed (delay time)
+        Serial.println(speedDelay);
+      }
       // Servo 1
       if (servo01SP[i] == servo01SP[i + 1]) {
       }
