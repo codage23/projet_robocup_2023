@@ -97,43 +97,68 @@ void loop() {
 #if I2C and !BLUETOOTH and !TEST
 void fonctionI2C() {
   // Check for incoming data
-  // Lecture du module I2C et affichage des donnees sur le moniteur serie de l'Ordinateur
+  // Lecture du module I2C
   if (Wire.available() > 0) {
-    // *******   dataIn = I2C.readString();  // Read the data as string
-    dataIn = 90;
-    Serial.println(dataIn);
+    // raz du message
+    for (int i = 0; i < MAX_MESSAGE_LENGTH; i++) {
+      message[i] = '\0';
+    }
+    // prints the received data
+    Serial.print("I received: ");
+    for (int i = 0; i < MAX_MESSAGE_LENGTH ; i++) {
+      dataI2C =  Wire.read(); // lecture de l'i2c
+      if (dataI2C == 0xFFFFFFFF ) {  // fin du message avant la longueur maxi
+        break;
+      }
+      message[i] = dataI2C;  // constitution du message
+      //Serial.print(dataI2C,HEX);
+      Serial.print(message[i]);
+    }
+    Serial.println("");
+    //int taille = sizeof(message); // taille du tableau
+    int taille = strlen(message); // taille de la chaine
+    Serial.println(taille);
+    char dataInS[taille];
 
     // If "Waist" slider has changed value - Move Servo 1 to position
-    if (dataIn.startsWith("s1")) {
+
+    if (message[0] == 115 and message[1] == 49) { // s et 1
       // Extract only the number. E.g. from "s1120" to "120"
-      String dataInS = dataIn.substring(2, dataIn.length());
-      servo1Pos = dataInS.toInt();  // Convert the string into integer
+      for (int i = 0; i < taille; i++) {
+        dataInS[i] = message[i + 2];
+      }
+      servo1Pos = atoi(dataInS); // char to int
+
       Serial.println(servo1Pos);
       servo1Pos = map(servo1Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo1Pos);
+      //servo01.writeMicroseconds(1500); // 1000 a 2000 
 
       // We use for loops so we can control the speed of the servo
       // If previous position is bigger then current position
       if (servo1PPos > servo1Pos) {
         for ( int j = servo1PPos; j >= servo1Pos; j--) {   // Run servo down
           servo01.write(j);
-          delay(20);    // defines the speed at which the servo rotates
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
         }
-      }
-      // If previous position is smaller then current position
-      if (servo1PPos < servo1Pos) {
+      } else  if (servo1PPos < servo1Pos) { // If previous position is smaller then current position
         for ( int j = servo1PPos; j <= servo1Pos; j++) {   // Run servo up
           servo01.write(j);
-          delay(20);
+          delayMicroseconds(speedServo);
         }
       }
       servo1PPos = servo1Pos;   // set current position as previous position
     }
 
     // Move Servo 2  shoulder
-    if (dataIn.startsWith("s2")) {
-      String dataInS = dataIn.substring(2, dataIn.length());
-      servo2Pos = dataInS.toInt();
+
+    if (message[0] == 115 and message[1] == 50) { // s et 2
+      // Extract only the number. E.g. from "s1120" to "120"
+      for (int i = 0; i < taille; i++) {
+        dataInS[i] = message[i + 2];
+      }
+      servo2Pos = atoi(dataInS); // char to int
+
       Serial.println(servo2Pos);
       servo2Pos = map(servo2Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo2Pos);
@@ -141,21 +166,25 @@ void fonctionI2C() {
       if (servo2PPos > servo2Pos) {
         for ( int j = servo2PPos; j >= servo2Pos; j--) {
           servo02.write(j);
-          delay(50);
+          delayMicroseconds(speedServo);
         }
-      }
-      if (servo2PPos < servo2Pos) {
+      } else if (servo2PPos < servo2Pos) {
         for ( int j = servo2PPos; j <= servo2Pos; j++) {
           servo02.write(j);
-          delay(50);
+          delayMicroseconds(speedServo);
         }
       }
       servo2PPos = servo2Pos;
     }
     // Move Servo 3  elbow
-    if (dataIn.startsWith("s3")) {
-      String dataInS = dataIn.substring(2, dataIn.length());
-      servo3Pos = dataInS.toInt();
+
+    if (message[0] == 115 and message[1] == 51) { // s et 3
+      // Extract only the number. E.g. from "s1120" to "120"
+      for (int i = 0; i < taille; i++) {
+        dataInS[i] = message[i + 2];
+      }
+      servo3Pos = atoi(dataInS); // char to int
+
       Serial.println(servo3Pos);
       servo3Pos = map(servo3Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo3Pos);
@@ -163,21 +192,25 @@ void fonctionI2C() {
       if (servo3PPos > servo3Pos) {
         for ( int j = servo3PPos; j >= servo3Pos; j--) {
           servo03.write(j);
-          delay(30);
+          delayMicroseconds(speedServo);
         }
-      }
-      if (servo3PPos < servo3Pos) {
+      } else if (servo3PPos < servo3Pos) {
         for ( int j = servo3PPos; j <= servo3Pos; j++) {
           servo03.write(j);
-          delay(30);
+          delayMicroseconds(speedServo);
         }
       }
       servo3PPos = servo3Pos;
     }
     // Move Servo 4  wrist roll
-    if (dataIn.startsWith("s4")) {
-      String dataInS = dataIn.substring(2, dataIn.length());
-      servo4Pos = dataInS.toInt();
+
+    if (message[0] == 115 and message[1] == 52) { // s et 4
+      // Extract only the number. E.g. from "s1120" to "120"
+      for (int i = 0; i < taille; i++) {
+        dataInS[i] = message[i + 2];
+      }
+      servo4Pos = atoi(dataInS); // char to int
+
       Serial.println(servo4Pos);
       servo4Pos = map(servo4Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo4Pos);
@@ -185,21 +218,25 @@ void fonctionI2C() {
       if (servo4PPos > servo4Pos) {
         for ( int j = servo4PPos; j >= servo4Pos; j--) {
           servo04.write(j);
-          delay(30);
+          delayMicroseconds(speedServo);
         }
-      }
-      if (servo4PPos < servo4Pos) {
+      } else if (servo4PPos < servo4Pos) {
         for ( int j = servo4PPos; j <= servo4Pos; j++) {
           servo04.write(j);
-          delay(30);
+          delayMicroseconds(speedServo);
         }
       }
       servo4PPos = servo4Pos;
     }
     // Move Servo 5  wrist pitch
-    if (dataIn.startsWith("s5")) {
-      String dataInS = dataIn.substring(2, dataIn.length());
-      servo5Pos = dataInS.toInt();
+
+    if (message[0] == 115 and message[1] == 53) { // s et 5
+      // Extract only the number. E.g. from "s1120" to "120"
+      for (int i = 0; i < taille; i++) {
+        dataInS[i] = message[i + 2];
+      }
+      servo5Pos = atoi(dataInS); // char to int
+
       Serial.println(servo5Pos);
       servo5Pos = map(servo5Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo5Pos);
@@ -207,21 +244,25 @@ void fonctionI2C() {
       if (servo5PPos > servo5Pos) {
         for ( int j = servo5PPos; j >= servo5Pos; j--) {
           servo05.write(j);
-          delay(30);
+          delayMicroseconds(speedServo);
         }
-      }
-      if (servo5PPos < servo5Pos) {
+      } else if (servo5PPos < servo5Pos) {
         for ( int j = servo5PPos; j <= servo5Pos; j++) {
           servo05.write(j);
-          delay(30);
+          delayMicroseconds(speedServo);
         }
       }
       servo5PPos = servo5Pos;
     }
     // Move Servo 6  gripper
-    if (dataIn.startsWith("s6")) {
-      String dataInS = dataIn.substring(2, dataIn.length());
-      servo6Pos = dataInS.toInt();
+
+    if (message[0] == 115 and message[1] == 54) { // s et 6
+      // Extract only the number. E.g. from "s1120" to "120"
+      for (int i = 0; i < taille; i++) {
+        dataInS[i] = message[i + 2];
+      }
+      servo6Pos = atoi(dataInS); // char to int
+
       Serial.println(servo6Pos);
       servo6Pos = map(servo6Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo6Pos);
@@ -229,19 +270,18 @@ void fonctionI2C() {
       if (servo6PPos > servo6Pos) {
         for ( int j = servo6PPos; j >= servo6Pos; j--) {
           servo06.write(j);
-          delay(30);
+          delayMicroseconds(speedServo);
         }
-      }
-      if (servo6PPos < servo6Pos) {
+      } else if (servo6PPos < servo6Pos) {
         for ( int j = servo6PPos; j <= servo6Pos; j++) {
           servo06.write(j);
-          delay(30);
+          delayMicroseconds(speedServo);
         }
       }
       servo6PPos = servo6Pos;
     }
     // If button "SAVE" is pressed
-    if (dataIn.startsWith("SAVE")) {
+    if (message[0] == 83 and message[1] == 65 and message[2] == 86 and message[3] == 69) { // SAVE
       servo01SP[index] = servo1PPos;  // save position into the array
       servo02SP[index] = servo2PPos;
       servo03SP[index] = servo3PPos;
@@ -250,12 +290,11 @@ void fonctionI2C() {
       servo06SP[index] = servo6PPos;
       index++;                        // Increase the array index
     }
-    // If button "RUN" is pressed
-    if (dataIn.startsWith("RUN")) {
+    if (message[0] == 82 and message[1] == 85 and message[2] == 78 ) { // RUN
       runservo();  // Automatic mode - run the saved steps
     }
     // If button "RESET" is pressed
-    if ( dataIn == "RESET") {
+    if (message[0] == 82 and message[1] == 69 and message[2] == 83 and message[3] == 69 and message[4] == 84) { // RESET
       memset(servo01SP, 0, sizeof(servo01SP)); // Clear the array data to 0
       memset(servo02SP, 0, sizeof(servo02SP));
       memset(servo03SP, 0, sizeof(servo03SP));
@@ -269,14 +308,38 @@ void fonctionI2C() {
 
 // Automatic mode custom function - run the saved steps
 void runservo() {
-  while (dataIn != "RESET") {   // Run the steps over and over again until "RESET" button is pressed
+  /*
+    while (dataIn != "RESET") {   // Run the steps over and over again until "RESET" button is pressed
     for (int i = 0; i <= index - 2; i++) {  // Run through all steps(index)
-      //*****        dataIn = I2C.readString();
-      dataIn = 90;
+
+    for (int j = 0; j < MAX_MESSAGE_LENGTH; j++) {
+      dataI2C =  Wire.read(); // lecture de l'i2c
+      if (dataI2C > 31) {  // code ascii
+        message[j] = dataI2C;
+        Serial.print(message[j]);
+      }
+    }
+    dataIn = String (message);
+    Serial.println("");
+    Serial.println(dataIn);
+
+      //dataIn = Wire.read(); // lecture de l'i2c
       if ( dataIn == "PAUSE") {           // If button "PAUSE" is pressed
         while (dataIn != "RUN") {         // Wait until "RUN" is pressed again
-          // ****             dataIn = I2C.readString();
-          dataIn = 90;
+
+
+    for (int k = 0; k < MAX_MESSAGE_LENGTH; k++) {
+      dataI2C =  Wire.read(); // lecture de l'i2c
+      if (dataI2C > 31) {  // code ascii
+        message[k] = dataI2C;
+        Serial.print(message[k]);
+      }
+    }
+    dataIn = String (message);
+    Serial.println("");
+    Serial.println(dataIn);
+
+          //dataIn = Wire.read(); // lecture de l'i2c
           if ( dataIn == "RESET") {
             break;
           }
@@ -384,8 +447,10 @@ void runservo() {
         }
       }
     }
-  }
+    }
+  */
 }
+
 #endif
 
 #if TEST and !BLUETOOTH and !I2C

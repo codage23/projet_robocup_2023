@@ -9,8 +9,8 @@
 // Differentes fonctions du programme
 //========================================================
 #define TEST  0        // if 1 true,  0 false
-#define I2C  0         // if 1 true,  0 false
-#define BLUETOOTH  1   // if 1 true,  0 false
+#define I2C  1         // if 1 true,  0 false
+#define BLUETOOTH  0   // if 1 true,  0 false
 
 //==================================================================
 // Bluetooth
@@ -31,7 +31,7 @@
 //==================================================
 // Definition de l'adresse logique de l'esclave I2C
 //==================================================
-#define I2C_SLAVE_BRAS  1
+#define I2C_SLAVE_BRAS  11
 
 //==========
 // Variables
@@ -54,6 +54,12 @@ int servo01SP[50], servo02SP[50], servo03SP[50], servo04SP[50], servo05SP[50], s
 int speedDelay = 20;
 int index = 0;
 String dataIn = "";
+int dataI2C = 0;
+int speedServo = 100;
+
+const unsigned int MAX_MESSAGE_LENGTH = 32;
+static char message[MAX_MESSAGE_LENGTH]; // longueur maxi du message I2C
+
 
 //===========================
 // Robot arm initial position
