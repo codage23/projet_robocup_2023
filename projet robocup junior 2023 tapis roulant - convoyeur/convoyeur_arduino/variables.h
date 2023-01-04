@@ -27,17 +27,29 @@
 #define I2C_SLAVE_CONVOYEUR  12
 
 //==========
+// Sensor IR
+//==========
+int IRSensor = 12; // connect IR sensor module to Arduino pin D12
+
+int LED = 13;      // connect LED to Arduino pin 13
+
+//==========
 // Variables
 //==========
 //==================
 // stepper
 //==================
-//the number of steps in one revolution of your motor (28BYJ-48)
+//the number of steps in one revolution of your motor (28BYJ-48) 2048 pas par tour
 #define STEPS  2048
 
-int motorSpeed = 8; // 10 a 15 grand max
-int motorStep = 2048;  // 2048 pas par tour
-int motorStepInverse = -2048; // autre sens
+int motorSpeed = 8 ; // 6 a 16 grand max
+int motorStep = 48;  
+bool motorInverse = 0; // sens
+bool stopStart = 1; // 0 stop et 1 start
+
+//=====
+// I2C
+//=====
 String dataIn = "";
 int dataI2C = 0;
 

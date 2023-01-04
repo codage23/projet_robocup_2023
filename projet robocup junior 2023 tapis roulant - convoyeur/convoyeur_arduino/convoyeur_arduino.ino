@@ -12,10 +12,8 @@
 #include <Wire.h> //composants utilisant le protocole I2C
 #include "variables.h"
 
-
 // Creez un objet stepper appele 'MyStepper', notez l'ordre des broches:
 Stepper MyStepper(STEPS, 11, 9, 10, 8);  // IN1, IN3, IN2, IN4
-
 
 #if I2C and !TEST
 void fonctionI2C() {
@@ -41,45 +39,110 @@ void fonctionI2C() {
     //int taille = sizeof(message); // taille du tableau
     int taille = strlen(message); // taille de la chaine
     Serial.println(taille);
+
     char dataInS[taille];
-    // reception du message c1xx vitesse rpm
-    if (message[0] == 99 and message[1] == 49) { // c et 1
-      // Extract only the number. E.g. from "c110" to "10"
+
+    // reception du message mvxx vitesse rpm
+    if (message[0] == 109 and message[1] == 118) { // m motor et v vitesse speed
+      // Extract only the number. E.g. from "mv10" to "10"
       for (int i = 0; i < taille; i++) {
         dataInS[i] = message[i + 2];
       }
       motorSpeed = atoi(dataInS); // char to int
       Serial.println(motorSpeed);
-      MyStepper.setSpeed(motorSpeed); //  rpm
+    }
+
+    // reception du message mpxx pas
+    if (message[0] == 109 and message[1] == 112) { // m motor et p pas
+      // Extract only the number. E.g. from "mv120" to "120"
+      for (int i = 0; i < taille; i++) {
+        dataInS[i] = message[i + 2];
+      }
+      motorStep = atoi(dataInS); // char to int
+      Serial.println(motorStep);
+    }
+    // reception du message msx sens
+    if (message[0] == 109 and message[1] == 115) { // m motor et s sens
+      // Extract only the number. E.g. from "ms1" to "1"
+      for (int i = 0; i < taille; i++) {
+        dataInS[i] = message[i + 2];
+      }
+      motorInverse = atoi(dataInS); // char to int
+      Serial.println(motorInverse);
+    }
+    // reception du message STOP
+    if (message[0] == 83 and message[1] == 84 and message[2] == 79 and message[3] == 80) {  // STOP
+      stopStart = 0;
+      Serial.println(stopStart);
+    }
+    // reception du message START
+    if (message[0] == 83 and message[1] == 84 and message[2] == 79 and message[3] == 80) {  // START
+      stopStart = 1;
+      Serial.println(stopStart);
     }
   }
 }
 #endif
 
+bool sensorIR() {
+  int sensorStatus = digitalRead(IRSensor); // Set the GPIO as Input
+  // Check if the pin high or not
+  if (sensorStatus == 1)   {
+    // if the pin is high turn off the onboard Led
+    digitalWrite(LED, LOW); // LED LOW
+    Serial.println("objet absent");      // print Motion Detected! on the serial monitor window
+  }
+  else  {
+    //else turn on the onboard LED
+    digitalWrite(LED, HIGH);                 // LED High
+    Serial.println("objet present");         // print Motion Ended! on the serial monitor window
+  }
+  return sensorStatus;
+}
+
 void setup() {
   Serial.begin(9600);
   Serial.println();
-  Serial.println("Demarrage du convoyeur");
+  Serial.println("Demarrage du convoyeur avec le sensor ir");
+
+  pinMode(IRSensor, INPUT); // IR Sensor pin INPUT
+  pinMode(LED, OUTPUT);     // LED Pin Output
+
 #if I2C and !TEST
   // Initialise la library Wire et se connecte au bus I2C en tant qu'esclave
   Wire.begin(I2C_SLAVE_CONVOYEUR);
   // Définition de la fonction qui prendra en charge les informations recues sur le bus I2C
   Wire.onReceive(fonctionI2C);
 #endif
-  MyStepper.setSpeed(motorSpeed); //  rpm
-  MyStepper.step(motorStep); // do 2038 steps -- corresponds to one revolution in one minute
 }
 
 void loop() {
-
   MyStepper.setSpeed(motorSpeed); //  rpm
-  MyStepper.step(motorStep); // do 2038 steps -- corresponds to one revolution in one minute
-  delay(500); // wait for one second
-  MyStepper.step(motorStepInverse); // do 2038 steps in the other direction with faster speed -- corresponds to one revolution in 10 seconds
-  delay(500); // wait for one second
-  /*
-    #if I2C and !BLUETOOTH and !TEST
-    fonctionI2C();
-    #endif
-  */
+  if  (sensorIR() and stopStart) {
+    Serial.println(motorSpeed);
+    if (!motorInverse) {
+      Serial.println(-motorStep);
+      MyStepper.step(-motorStep); // do -xxx steps in the other direction
+    } else {
+      Serial.println(motorStep);
+      MyStepper.step(motorStep); // do -xxx steps in the other direction
+    }
+  } else {
+    /*
+      Serial.println(motorSpeed);
+      if (!motorInverse) {
+      Serial.println(motorStep);
+      MyStepper.step(motorStep); // xxx steps corresponds to one revolution in one minute for 1 rpm
+      } else {
+      Serial.println(-motorStep);
+      MyStepper.step(-motorStep); // do -xxx steps in the other direction
+      }
+    */
+  }
+  
+  // fonction  d'attente i2c
+#if I2C and !TEST
+  fonctionI2C();
+#endif
+
 }
