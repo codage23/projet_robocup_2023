@@ -74,8 +74,8 @@ void getFrequency() {
   delay(100);
 }
 
-void checkColor() {
-
+int checkColor() {
+  int couleur = 0;
   if ((red_value > green_value) && (red_value > blue_value) && (frequencyRed < 130)) {
     Serial.print(red_value);
     Serial.print("  ");
@@ -86,10 +86,12 @@ void checkColor() {
     digitalWrite(ledRed, HIGH);
     digitalWrite(ledGreen, LOW);
     digitalWrite(ledBlue, LOW);
-    
-    digitalWrite(ledRed1, HIGH);
-    digitalWrite(ledGreen1, LOW);
-    digitalWrite(ledBlue1, LOW);
+
+    couleur = 10; // rouge
+
+    //digitalWrite(ledRed1, HIGH);
+    //digitalWrite(ledGreen1, LOW);
+    //digitalWrite(ledBlue1, LOW);
 
   } else  if ((green_value > red_value) && (green_value > blue_value) && (frequencyGreen < 150)) {
     Serial.print(red_value);
@@ -101,10 +103,12 @@ void checkColor() {
     digitalWrite(ledRed, LOW);
     digitalWrite(ledGreen, HIGH);
     digitalWrite(ledBlue, LOW);
-    
-    digitalWrite(ledRed1, LOW);
-    digitalWrite(ledGreen1, HIGH);
-    digitalWrite(ledBlue1, LOW);
+
+    couleur = 20; // verte
+
+    //digitalWrite(ledRed1, LOW);
+    //digitalWrite(ledGreen1, HIGH);
+    //digitalWrite(ledBlue1, LOW);
 
   } else  if ((blue_value > red_value) && (blue_value > green_value) && (frequencyBlue < 130)) {
     Serial.print(red_value);
@@ -116,53 +120,34 @@ void checkColor() {
     digitalWrite(ledRed, LOW);
     digitalWrite(ledGreen, LOW);
     digitalWrite(ledBlue, HIGH);
-    
-    digitalWrite(ledRed1, LOW);
-    digitalWrite(ledGreen1, LOW);
-    digitalWrite(ledBlue1, HIGH);
+
+    couleur = 30; // bleue
+
+    //digitalWrite(ledRed1, LOW);
+    //digitalWrite(ledGreen1, LOW);
+    //digitalWrite(ledBlue1, HIGH);
 
   } else {
     Serial.println(" no detected!");
     digitalWrite(ledRed, LOW);
     digitalWrite(ledGreen, LOW);
     digitalWrite(ledBlue, LOW);
-    
-    digitalWrite(ledRed1, LOW);
-    digitalWrite(ledGreen1, LOW);
-    digitalWrite(ledBlue1, LOW);
+
+    couleur = 0; // sans
+
+    //digitalWrite(ledRed1, LOW);
+    //digitalWrite(ledGreen1, LOW);
+    //digitalWrite(ledBlue1, LOW);
   }
-  /*
-    // if ((frequencyRed < 45 && frequencyRed > 25)  && (frequencyGreen < 105 && frequencyGreen > 85)
-    //     && (frequencyBlue < 75 && frequencyBlue > 55)) {
-    if (((frequencyRed < 50 + 20) && (frequencyRed > 50 - 20 ))
-        && ((frequencyGreen < 90 + 20) && (frequencyGreen > 90 - 20))
-        && ((frequencyBlue < 70 + 20) && (frequencyBlue > 70 - 20))) {
-      digitalWrite(ledRed, HIGH);
-      colorFind = true;
-    } else if (((frequencyRed < 90 + 20) && (frequencyRed > 90 - 20 ))
-               && ((frequencyGreen < 70 + 20) && (frequencyGreen > 70 - 20))
-               && ((frequencyBlue < 80 + 20) && (frequencyBlue > 80 - 20))) {
-      digitalWrite(ledGreen, HIGH);
-      colorFind = true;
-    } else if (((frequencyRed < 90 + 20) && (frequencyRed > 90 - 20 ))
-               && ((frequencyGreen < 80 + 20) && (frequencyGreen > 80 - 20))
-               && ((frequencyBlue < 50 + 20) && (frequencyBlue > 50 - 20))) {
-      digitalWrite(ledBlue, HIGH);
-      colorFind = true;
-    } else {
-      digitalWrite(ledRed, LOW);
-      digitalWrite(ledGreen, LOW);
-      digitalWrite(ledBlue, LOW);
-    }
-  */
+  return couleur;
 }
 
 #if I2C and !TEST
 void fonctionI2C() {
-  /*
-    // Check for incoming data
-    // Lecture du module I2C
-    if (Wire.available() > 0) {
+
+  // Check for incoming data
+  // Lecture du module I2C
+  if (Wire.available() > 0) {
     // raz du message
     for (int i = 0; i < MAX_MESSAGE_LENGTH; i++) {
       message[i] = '\0';
@@ -191,184 +176,53 @@ void fonctionI2C() {
       for (int i = 0; i < taille; i++) {
         dataInS[i] = message[i + 2];
       }
-      servo1Pos = atoi(dataInS); // char to int
+      //servo1Pos = atoi(dataInS); // char to int
 
-      Serial.println(servo1Pos);
-      servo1Pos = map(servo1Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
-      Serial.println(servo1Pos);
+      //Serial.println(servo1Pos);
+      //servo1Pos = map(servo1Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
+      //Serial.println(servo1Pos);
       //servo01.writeMicroseconds(1500); // 1000 a 2000
 
       // We use for loops so we can control the speed of the servo
       // If previous position is bigger then current position
-      if (servo1PPos > servo1Pos) {
-        for ( int j = servo1PPos; j >= servo1Pos; j--) {   // Run servo down
-          servo01.write(j);
-          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-        }
-      } else  if (servo1PPos < servo1Pos) { // If previous position is smaller then current position
-        for ( int j = servo1PPos; j <= servo1Pos; j++) {   // Run servo up
-          servo01.write(j);
-          delayMicroseconds(speedServo);
-        }
-      }
-      servo1PPos = servo1Pos;   // set current position as previous position
+      //if (servo1PPos > servo1Pos) {
+      //for ( int j = servo1PPos; j >= servo1Pos; j--) {   // Run servo down
+      //servo01.write(j);
+      //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+      //}
+      //} else  if (servo1PPos < servo1Pos) { // If previous position is smaller then current position
+      // for ( int j = servo1PPos; j <= servo1Pos; j++) {   // Run servo up
+      //servo01.write(j);
+      // delayMicroseconds(speedServo);
+      //}
+      //}
+      //servo1PPos = servo1Pos;   // set current position as previous position
     }
 
-    // Move Servo 2  shoulder
-
-    if (message[0] == 115 and message[1] == 50) { // s et 2
-      // Extract only the number. E.g. from "s1120" to "120"
-      for (int i = 0; i < taille; i++) {
-        dataInS[i] = message[i + 2];
-      }
-      servo2Pos = atoi(dataInS); // char to int
-
-      Serial.println(servo2Pos);
-      servo2Pos = map(servo2Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
-      Serial.println(servo2Pos);
-
-      if (servo2PPos > servo2Pos) {
-        for ( int j = servo2PPos; j >= servo2Pos; j--) {
-          servo02.write(j);
-          delayMicroseconds(speedServo);
-        }
-      } else if (servo2PPos < servo2Pos) {
-        for ( int j = servo2PPos; j <= servo2Pos; j++) {
-          servo02.write(j);
-          delayMicroseconds(speedServo);
-        }
-      }
-      servo2PPos = servo2Pos;
-    }
-    // Move Servo 3  elbow
-
-    if (message[0] == 115 and message[1] == 51) { // s et 3
-      // Extract only the number. E.g. from "s1120" to "120"
-      for (int i = 0; i < taille; i++) {
-        dataInS[i] = message[i + 2];
-      }
-      servo3Pos = atoi(dataInS); // char to int
-
-      Serial.println(servo3Pos);
-      servo3Pos = map(servo3Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
-      Serial.println(servo3Pos);
-
-      if (servo3PPos > servo3Pos) {
-        for ( int j = servo3PPos; j >= servo3Pos; j--) {
-          servo03.write(j);
-          delayMicroseconds(speedServo);
-        }
-      } else if (servo3PPos < servo3Pos) {
-        for ( int j = servo3PPos; j <= servo3Pos; j++) {
-          servo03.write(j);
-          delayMicroseconds(speedServo);
-        }
-      }
-      servo3PPos = servo3Pos;
-    }
-    // Move Servo 4  wrist roll
-
-    if (message[0] == 115 and message[1] == 52) { // s et 4
-      // Extract only the number. E.g. from "s1120" to "120"
-      for (int i = 0; i < taille; i++) {
-        dataInS[i] = message[i + 2];
-      }
-      servo4Pos = atoi(dataInS); // char to int
-
-      Serial.println(servo4Pos);
-      servo4Pos = map(servo4Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
-      Serial.println(servo4Pos);
-
-      if (servo4PPos > servo4Pos) {
-        for ( int j = servo4PPos; j >= servo4Pos; j--) {
-          servo04.write(j);
-          delayMicroseconds(speedServo);
-        }
-      } else if (servo4PPos < servo4Pos) {
-        for ( int j = servo4PPos; j <= servo4Pos; j++) {
-          servo04.write(j);
-          delayMicroseconds(speedServo);
-        }
-      }
-      servo4PPos = servo4Pos;
-    }
-    // Move Servo 5  wrist pitch
-
-    if (message[0] == 115 and message[1] == 53) { // s et 5
-      // Extract only the number. E.g. from "s1120" to "120"
-      for (int i = 0; i < taille; i++) {
-        dataInS[i] = message[i + 2];
-      }
-      servo5Pos = atoi(dataInS); // char to int
-
-      Serial.println(servo5Pos);
-      servo5Pos = map(servo5Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
-      Serial.println(servo5Pos);
-
-      if (servo5PPos > servo5Pos) {
-        for ( int j = servo5PPos; j >= servo5Pos; j--) {
-          servo05.write(j);
-          delayMicroseconds(speedServo);
-        }
-      } else if (servo5PPos < servo5Pos) {
-        for ( int j = servo5PPos; j <= servo5Pos; j++) {
-          servo05.write(j);
-          delayMicroseconds(speedServo);
-        }
-      }
-      servo5PPos = servo5Pos;
-    }
-    // Move Servo 6  gripper
-
-    if (message[0] == 115 and message[1] == 54) { // s et 6
-      // Extract only the number. E.g. from "s1120" to "120"
-      for (int i = 0; i < taille; i++) {
-        dataInS[i] = message[i + 2];
-      }
-      servo6Pos = atoi(dataInS); // char to int
-
-      Serial.println(servo6Pos);
-      servo6Pos = map(servo6Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
-      Serial.println(servo6Pos);
-
-      if (servo6PPos > servo6Pos) {
-        for ( int j = servo6PPos; j >= servo6Pos; j--) {
-          servo06.write(j);
-          delayMicroseconds(speedServo);
-        }
-      } else if (servo6PPos < servo6Pos) {
-        for ( int j = servo6PPos; j <= servo6Pos; j++) {
-          servo06.write(j);
-          delayMicroseconds(speedServo);
-        }
-      }
-      servo6PPos = servo6Pos;
-    }
     // If button "SAVE" is pressed
     if (message[0] == 83 and message[1] == 65 and message[2] == 86 and message[3] == 69) { // SAVE
-      servo01SP[index] = servo1PPos;  // save position into the array
-      servo02SP[index] = servo2PPos;
-      servo03SP[index] = servo3PPos;
-      servo04SP[index] = servo4PPos;
-      servo05SP[index] = servo5PPos;
-      servo06SP[index] = servo6PPos;
-      index++;                        // Increase the array index
+      //servo01SP[index] = servo1PPos;  // save position into the array
+      // servo02SP[index] = servo2PPos;
+      //servo03SP[index] = servo3PPos;
+      //servo04SP[index] = servo4PPos;
+      //servo05SP[index] = servo5PPos;
+      //servo06SP[index] = servo6PPos;
+      //index++;                        // Increase the array index
     }
     if (message[0] == 82 and message[1] == 85 and message[2] == 78 ) { // RUN
-      runservo();  // Automatic mode - run the saved steps
+      //runservo();  // Automatic mode - run the saved steps
     }
     // If button "RESET" is pressed
     if (message[0] == 82 and message[1] == 69 and message[2] == 83 and message[3] == 69 and message[4] == 84) { // RESET
-      memset(servo01SP, 0, sizeof(servo01SP)); // Clear the array data to 0
-      memset(servo02SP, 0, sizeof(servo02SP));
-      memset(servo03SP, 0, sizeof(servo03SP));
-      memset(servo04SP, 0, sizeof(servo04SP));
-      memset(servo05SP, 0, sizeof(servo05SP));
-      memset(servo06SP, 0, sizeof(servo06SP));
-      index = 0;  // Index to 0
+      //memset(servo01SP, 0, sizeof(servo01SP)); // Clear the array data to 0
+      //memset(servo02SP, 0, sizeof(servo02SP));
+      //memset(servo03SP, 0, sizeof(servo03SP));
+      //memset(servo04SP, 0, sizeof(servo04SP));
+      //memset(servo05SP, 0, sizeof(servo05SP));
+      //memset(servo06SP, 0, sizeof(servo06SP));
+      //index = 0;  // Index to 0
     }
-    }
-  */
+  }
 }
 #endif
 
@@ -429,11 +283,32 @@ void setup() {
 // loop
 //=====
 void loop() {
-  digitalWrite(ledsBlanches, LOW); // leds blanches pour le detecteur de couleur
+  // test avant creneau
+  if (SensorIr() == 1 and sensorIRapres == 0 and sensorIRpendant == 0) {
+    sensorIRavant = 1;  // 1  0  0
+    sensorIRpendant = 0;
+    sensorIRapres = 0;
+    Serial.println("avant");
+    //test pendant creneau
+  } else if (SensorIr() == 0) {
+    sensorIRpendant = 1; // 1  1  0
+    sensorIRavant = 1;
+    sensorIRapres = 0;
+    Serial.println("pendant");
+    //test apres creneau
+  } else if (SensorIr() == 1 and sensorIRavant == 1 ) {
+    sensorIRapres = 1;  //  0  0  1
+    sensorIRavant = 0;
+    sensorIRpendant = 0;
+    Serial.println("apres");
+    digitalWrite(ledsBlanches, LOW); // leds blanches pour le detecteur de couleur
+    delay(300);
+    getFrequency(); // test les differentes couleurs
+    checkColor();  // selectionne la bonne couleur
+    delay(300);
+    digitalWrite(ledsBlanches, HIGH); // leds blanches pour le detecteur de couleur
+  }
 
-  getFrequency();
-  checkColor();
-  SensorIr();
 
 #if I2C and !TEST
   fonctionI2C();

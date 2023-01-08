@@ -61,6 +61,10 @@ int blue_value = 0;
 
 bool colorFind = false;
 
+bool sensorIRavant = 0;
+bool sensorIRpendant = 0;
+bool sensorIRapres = 0;
+
 //=====
 // I2C
 //=====
