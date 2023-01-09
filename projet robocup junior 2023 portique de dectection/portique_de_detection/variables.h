@@ -23,6 +23,7 @@ int ledBlue = 10;
 int ledRed1 = 7;
 int ledGreen1 = 12;
 int ledBlue1 = 8;
+int resultatLed1 = 0;
 
 #define ledsBlanches A0
 
@@ -58,6 +59,7 @@ int frequencyBlue = 0;
 int red_value = 0;
 int green_value = 0;
 int blue_value = 0;
+int couleur = 0;
 
 bool colorFind = false;
 
