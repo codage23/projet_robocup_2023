@@ -152,7 +152,7 @@ void receiveEvents() {
 
     // demande couleur
     if (message[0] == 112 and message[1] == 99) { // p et c
-      Wire.write(couleur);
+      requestI2C = 1; // demande du maitre i2c
     }
 
     // allumage led1 multicolor
@@ -199,7 +199,11 @@ void receiveEvents() {
 
 #if I2C and !TEST
 void requestEvents() {
-  // Wire.write(couleur);
+  //if (requestI2C) {
+  Wire.write(couleur);
+  //} else {
+  //requestI2C = 0;
+  //}
 }
 #endif
 

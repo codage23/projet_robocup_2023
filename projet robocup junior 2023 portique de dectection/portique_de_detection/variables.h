@@ -72,6 +72,7 @@ bool sensorIRapres = 0;
 //=====
 String dataIn = "";
 int dataI2C = 0;
+bool requestI2C = 0;
 
 const unsigned int MAX_MESSAGE_LENGTH = 32;
 static char message[MAX_MESSAGE_LENGTH]; // longueur maxi du message I2C
