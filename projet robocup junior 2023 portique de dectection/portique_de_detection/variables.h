@@ -64,7 +64,7 @@ int couleur = 0;
 bool colorFind = false;
 
 int sensor_ir = 0;            // variable pour l'etat actuel du bouton poussoir
-int sensor_ir_mem = 1;        // variable pour l'etat precedent du bouton poussoir
+int sensor_ir_mem = 0;        // variable pour l'etat precedent du bouton poussoir
 
 //=====
 // I2C

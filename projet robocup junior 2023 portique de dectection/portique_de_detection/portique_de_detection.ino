@@ -152,7 +152,8 @@ void receiveEvents() {
 
     // demande couleur  pc(x)
     if (message[0] == 112 and message[1] == 99) { // p et c
-      requestI2C = 1; // demande du mastezr i2c
+      requestI2C = 1; // demande du master i2c
+      //Serial.println(requestI2C);
     }
 
     // allumage led1 multicolor  pl(xx)
@@ -194,7 +195,7 @@ void receiveEvents() {
 
       couleur = 0;
       int sensor_ir = 0;            // variable pour l'etat actuel du bouton poussoir
-      int sensor_ir_mem = 1;        // variable pour l'etat precedent du bouton poussoir
+      int sensor_ir_mem = 0;        // variable pour l'etat precedent du bouton poussoir
     }
   }
 }
@@ -202,19 +203,21 @@ void receiveEvents() {
 
 #if I2C and !TEST
 void requestEvents() {
-  //if (requestI2C) {
-  //Serial.print(" couleur request :  ");
-  //Serial.println(couleur);
-  Wire.write(couleur);
-  //} else {
-  //requestI2C = 0;
-  //}
+  if (requestI2C) {
+    //Serial.print(" couleur request :  ");
+    //Serial.println(couleur);
+    Wire.write(couleur);
+  } else {
+    requestI2C = 0;
+  }
 }
 #endif
 
 void portiqueIR () {
+  delay(30); // eviter les pics
   sensor_ir = SensorIr();  // lit l'etat actuel du sensor IR
-  Serial.println(sensor_ir);
+  //Serial.println(sensor_ir);
+  //Serial.println(sensor_ir);
   // compare l'etat actuel du sensor IR a l'etat precedent memorise
   if (sensor_ir != sensor_ir_mem) {      // si l'etat du sensor IR a change
     // on memorise l'etat courant du sensor IR pour les prochains passages dans la boucle loop

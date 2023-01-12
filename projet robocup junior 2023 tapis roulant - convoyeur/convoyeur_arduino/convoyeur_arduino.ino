@@ -16,7 +16,7 @@
 Stepper MyStepper(STEPS, 11, 9, 10, 8);  // IN1, IN3, IN2, IN4
 
 #if I2C and !TEST
-void fonctionI2C() {
+void receiveEvents (){
   // Check for incoming data
   // Lecture du module I2C
   if (Wire.available() > 0) {
@@ -43,6 +43,16 @@ void fonctionI2C() {
     char dataInS[taille];
 
     // reception du message mvxx vitesse rpm
+    if (message[0] == 115 and message[1] == 99) { // s situation et c convoyeur
+      // Extract only the number. E.g. from "sc1" to "1"
+      for (int i = 0; i < taille; i++) {
+        dataInS[i] = message[i + 2];
+      }
+      requestI2C = 1; // demande du master i2c
+      //Serial.println(requestI2C);
+    }
+
+    // reception du message mvxx vitesse rpm
     if (message[0] == 109 and message[1] == 118) { // m motor et v vitesse speed
       // Extract only the number. E.g. from "mv10" to "10"
       for (int i = 0; i < taille; i++) {
@@ -54,7 +64,7 @@ void fonctionI2C() {
 
     // reception du message mpxx pas
     if (message[0] == 109 and message[1] == 112) { // m motor et p pas
-      // Extract only the number. E.g. from "mv120" to "120"
+      // Extract only the number. E.g. from "mp120" to "120"
       for (int i = 0; i < taille; i++) {
         dataInS[i] = message[i + 2];
       }
@@ -80,6 +90,17 @@ void fonctionI2C() {
       stopStart = 1;
       Serial.println(stopStart);
     }
+  }
+}
+#endif
+
+
+#if I2C and !TEST
+void requestEvents() {
+  if (requestI2C) {
+    Wire.write(sensorIR());
+  } else {
+    requestI2C = 0;
   }
 }
 #endif
@@ -112,7 +133,8 @@ void setup() {
   // Initialise la library Wire et se connecte au bus I2C en tant qu'esclave
   Wire.begin(I2C_SLAVE_CONVOYEUR);
   // Définition de la fonction qui prendra en charge les informations recues sur le bus I2C
-  Wire.onReceive(fonctionI2C);
+  Wire.onReceive(receiveEvents);
+  Wire.onRequest(requestEvents);
 #endif
 }
 
@@ -139,10 +161,4 @@ void loop() {
       }
     */
   }
-  
-  // fonction  d'attente i2c
-#if I2C and !TEST
-  fonctionI2C();
-#endif
-
 }

@@ -64,6 +64,8 @@ void loop() {
 
   if (nbTour == 1 ) {
     // demande à recevoir 1 octets du périphérique d'adresse 14
+    values = "pc";  // demande couleur
+    SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
     Wire.requestFrom(I2C_SLAVE_ADDRESS, 1);
 
     while (Wire.available())  {    // attente des octets i2c
@@ -72,19 +74,19 @@ void loop() {
         values = "pl10";  // led rouge
         SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
         delay(3000);
-        values = "RESET"; 
+        values = "RESET";
         SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
       } else if ( c == 2 ) {
         values = "pl20";  // led verte
         SendValue(values, I2C_SLAVE_ADDRESS); //envoi i2c
         delay(3000);
-        values = "RESET"; 
+        values = "RESET";
         SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
       } else if ( c == 3 ) {
         values = "pl30"; // led bleue
         SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
         delay(3000);
-        values = "RESET";  
+        values = "RESET";
         SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
       } else {
         values = "pl00";  // led eteinte
