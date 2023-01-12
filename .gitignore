@@ -1,6 +1,7 @@
 # git ignore les fichiers suivants
 DEVIS_FR_104235_0515528010_MJC-CS.pdf
 atelier_codage_robocup_2023_mail_github.odt
+robocup 2023 commandes.odt
 
 # Ignore Logs
 **/*.log
