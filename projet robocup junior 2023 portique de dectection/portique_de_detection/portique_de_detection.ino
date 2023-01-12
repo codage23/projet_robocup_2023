@@ -85,7 +85,7 @@ int checkColor() {
     digitalWrite(ledGreen, LOW);
     digitalWrite(ledBlue, LOW);
 
-    couleur = 10; // rouge
+    couleur = 1; // rouge
 
   } else  if ((green_value > red_value) && (green_value > blue_value) && (frequencyGreen < 150)) {
     Serial.print(red_value);
@@ -98,7 +98,7 @@ int checkColor() {
     digitalWrite(ledGreen, HIGH);
     digitalWrite(ledBlue, LOW);
 
-    couleur = 20; // verte
+    couleur = 2; // verte
 
   } else  if ((blue_value > red_value) && (blue_value > green_value) && (frequencyBlue < 130)) {
     Serial.print(red_value);
@@ -111,7 +111,7 @@ int checkColor() {
     digitalWrite(ledGreen, LOW);
     digitalWrite(ledBlue, HIGH);
 
-    couleur = 30; // bleue
+    couleur = 3; // bleue
 
   } else {
     Serial.println(" no detected!");
@@ -119,7 +119,7 @@ int checkColor() {
     digitalWrite(ledGreen, LOW);
     digitalWrite(ledBlue, LOW);
 
-    couleur = 00; // sans
+    couleur = 0; // sans
   }
   return couleur;
 }
@@ -134,7 +134,7 @@ void receiveEvents() {
       message[i] = '\0';
     }
     // prints the received data
-    Serial.print("I received: ");
+    //Serial.print("I received: ");
     for (int i = 0; i < MAX_MESSAGE_LENGTH ; i++) {
       dataI2C =  Wire.read(); // lecture de l'i2c
       if (dataI2C == 0xFFFFFFFF ) {  // fin du message avant la longueur maxi
@@ -142,56 +142,59 @@ void receiveEvents() {
       }
       message[i] = dataI2C;  // constitution du message
       //Serial.print(dataI2C,HEX);
-      Serial.print(message[i]);
+      //Serial.print(message[i]);
     }
-    Serial.println("");
+    //Serial.println("");
     //int taille = sizeof(message); // taille du tableau
-    int taille = strlen(message); // taille de la chaine
-    Serial.println(taille);
+    int taille = strlen(message);   // taille de la chaine
+    //Serial.println(taille);
     char dataInS[taille];
 
-    // demande couleur
+    // demande couleur  pc(x)
     if (message[0] == 112 and message[1] == 99) { // p et c
-      requestI2C = 1; // demande du maitre i2c
+      requestI2C = 1; // demande du mastezr i2c
     }
 
-    // allumage led1 multicolor
-    if (message[0] == 112 and message[1] == 108 and message[2] == 86 and message[3] == 69) { // p et l
-      // Extract only the number. E.g. from "s1120" to "120"
+    // allumage led1 multicolor  pl(xx)
+    if (message[0] == 112 and message[1] == 108 ) { // p et l
+      // Extract only the number from "pl10" to "10"
       for (int i = 0; i < taille; i++) {
         dataInS[i] = message[i + 2];
       }
       resultatLed1 = atoi(dataInS); // char to int
-      Serial.println(resultatLed1);
-      if (resultatLed1 == 10) {
+      //Serial.println(resultatLed1);
+      if (resultatLed1 == 10) {        // rouge
         digitalWrite(ledRed1, HIGH);
         digitalWrite(ledGreen1, LOW);
         digitalWrite(ledBlue1, LOW);
-      } else if (resultatLed1 == 20) {
+      } else if (resultatLed1 == 20) { // verte
         digitalWrite(ledRed1, LOW);
         digitalWrite(ledGreen1, HIGH);
         digitalWrite(ledBlue1, LOW);
-      } else if (resultatLed1 == 30) {
+      } else if (resultatLed1 == 30) { // bleue
         digitalWrite(ledRed1, LOW);
         digitalWrite(ledGreen1, LOW);
         digitalWrite(ledBlue1, HIGH);
-      } else {
+      } else {                         // eteinte
         digitalWrite(ledRed1, LOW);
         digitalWrite(ledGreen1, LOW);
         digitalWrite(ledBlue1, LOW);
       }
-
     }
 
-    // If button "RESET" is pressed
+    // If button "RESET" is pressed  raz du portique
     if (message[0] == 82 and message[1] == 69 and message[2] == 83 and message[3] == 69 and message[4] == 84) { // RESET
       digitalWrite(ledRed1, LOW);
       digitalWrite(ledGreen1, LOW);
       digitalWrite(ledBlue1, LOW);
 
-      sensorIRavant = 0;
-      sensorIRpendant = 0;
-      sensorIRapres = 0;
+      digitalWrite(ledRed, LOW);
+      digitalWrite(ledGreen, LOW);
+      digitalWrite(ledBlue, LOW);
+
+      couleur = 0;
+      int sensor_ir = 0;            // variable pour l'etat actuel du bouton poussoir
+      int sensor_ir_mem = 1;        // variable pour l'etat precedent du bouton poussoir
     }
   }
 }
@@ -200,6 +203,8 @@ void receiveEvents() {
 #if I2C and !TEST
 void requestEvents() {
   //if (requestI2C) {
+  //Serial.print(" couleur request :  ");
+  //Serial.println(couleur);
   Wire.write(couleur);
   //} else {
   //requestI2C = 0;
@@ -208,30 +213,21 @@ void requestEvents() {
 #endif
 
 void portiqueIR () {
-  // test avant creneau
-  if (SensorIr() == 1 and sensorIRapres == 0 and sensorIRpendant == 0) {
-    sensorIRavant = 1;  // 1  0  0
-    sensorIRpendant = 0;
-    sensorIRapres = 0;
-    Serial.println("avant");
-    //test pendant creneau
-  } else if (SensorIr() == 0) {
-    sensorIRpendant = 1; // 1  1  0
-    sensorIRavant = 1;
-    sensorIRapres = 0;
-    Serial.println("pendant");
-    //test apres creneau
-  } else if (SensorIr() == 1 and sensorIRavant == 1 ) {
-    sensorIRapres = 1;  //  0  0  1
-    sensorIRavant = 0;
-    sensorIRpendant = 0;
-    Serial.println("apres");
-    digitalWrite(ledsBlanches, LOW); // leds blanches pour le detecteur de couleur
-    delay(300);
-    getFrequency(); // test les differentes couleurs
-    checkColor();  // selectionne la bonne couleur
-    delay(300);
-    digitalWrite(ledsBlanches, HIGH); // leds blanches pour le detecteur de couleur
+  sensor_ir = SensorIr();  // lit l'etat actuel du sensor IR
+  Serial.println(sensor_ir);
+  // compare l'etat actuel du sensor IR a l'etat precedent memorise
+  if (sensor_ir != sensor_ir_mem) {      // si l'etat du sensor IR a change
+    // on memorise l'etat courant du sensor IR pour les prochains passages dans la boucle loop
+    sensor_ir_mem = sensor_ir;
+    // si ce nouvel etat est passe a 1, on a donc un front montant.
+    if (sensor_ir == 1) {
+      digitalWrite(ledsBlanches, LOW); // leds blanches pour le detecteur de couleur allumage
+      delay(300);
+      getFrequency(); // test les differentes couleurs
+      checkColor();   // selectionne la bonne couleur
+      delay(300);
+      digitalWrite(ledsBlanches, HIGH); // leds blanches pour le detecteur de couleur extinction
+    }
   }
 }
 
@@ -284,8 +280,8 @@ void setup() {
   // Initialise la library Wire et se connecte au bus I2C en tant qu'esclave
   Wire.begin(I2C_SLAVE_PORTIQUE);
   // Définition de la fonction qui prendra en charge les informations recues sur le bus I2C
-  Wire.onRequest(requestEvents);
   Wire.onReceive(receiveEvents);
+  Wire.onRequest(requestEvents);
 #endif
 }
 
@@ -294,8 +290,4 @@ void setup() {
 //=====
 void loop() {
   portiqueIR();
-
-#if I2C and !TEST
-  receiveEvents();
-#endif
 }

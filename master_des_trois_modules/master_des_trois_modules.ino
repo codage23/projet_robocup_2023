@@ -5,7 +5,7 @@
 
 
 // Définition des adresses logiques des esclaves I2C.
-#define I2C_SLAVE_ADDRESS  11
+#define I2C_SLAVE_ADDRESS  14  //11 bras, 12 convoyeur et 14 portique
 
 char* values ;
 int nbTour = 1;
@@ -24,6 +24,9 @@ void setup()
 
   // Initialise la library Wire et se connecte au bus I2C en tant que maître
   Wire.begin();
+
+  values = "pl00";
+  SendValue(values, I2C_SLAVE_ADDRESS);
 
 }
 
@@ -58,10 +61,42 @@ void SendValue(char* values, int slaveAddress) {
 // ---------------------------------------------------------------------------
 
 void loop() {
-  delay(1000);
 
   if (nbTour == 1 ) {
+    // demande à recevoir 1 octets du périphérique d'adresse 14
+    Wire.requestFrom(I2C_SLAVE_ADDRESS, 1);
 
+    while (Wire.available())  {    // attente des octets i2c
+      char c = Wire.read();
+      if ( c == 1 ) {
+        values = "pl10";  // led rouge
+        SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
+        delay(3000);
+        values = "RESET"; 
+        SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
+      } else if ( c == 2 ) {
+        values = "pl20";  // led verte
+        SendValue(values, I2C_SLAVE_ADDRESS); //envoi i2c
+        delay(3000);
+        values = "RESET"; 
+        SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
+      } else if ( c == 3 ) {
+        values = "pl30"; // led bleue
+        SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
+        delay(3000);
+        values = "RESET";  
+        SendValue(values, I2C_SLAVE_ADDRESS); // envoi i2c
+      } else {
+        values = "pl00";  // led eteinte
+        SendValue(values, I2C_SLAVE_ADDRESS);
+      }
+      c = c + 48;  //  chiffre charactere ascii
+      Serial.println(c);  // envoi à la console
+    }
+  }
+}
+/*
+  if (nbTour == 1 ) {
     // repos WAIST
     values = "s190";
     SendValue(values, I2C_SLAVE_ADDRESS);
@@ -141,19 +176,19 @@ void loop() {
 
     nbTour = 0;
   }
+*/
 
-  /*
-    values = "ss60";
-    SendValue(values, I2C_SLAVE_ADDRESS);
-    delay(1000);
-    values = "SAVE";
-    SendValue(values, I2C_SLAVE_ADDRESS);
-    delay(1000);
-    values = "RESET";
-    SendValue(values, I2C_SLAVE_ADDRESS);
-    delay(1000);
-    values = "RUN";
-    SendValue(values, I2C_SLAVE_ADDRESS);
-    delay(1000);
-  */
-}
+/*
+  values = "ss60";
+  SendValue(values, I2C_SLAVE_ADDRESS);
+  delay(1000);
+  values = "SAVE";
+  SendValue(values, I2C_SLAVE_ADDRESS);
+  delay(1000);
+  values = "RESET";
+  SendValue(values, I2C_SLAVE_ADDRESS);
+  delay(1000);
+  values = "RUN";
+  SendValue(values, I2C_SLAVE_ADDRESS);
+  delay(1000);
+*/
