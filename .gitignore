@@ -6,3 +6,6 @@ robocup 2023 commandes.odt
 # Ignore Logs
 **/*.log
 **/*.doc
+**/*.idea
+**/*.gcode
+
