@@ -132,19 +132,29 @@ void fonctionI2C() {
       Serial.println(servo1Pos);
       servo1Pos = map(servo1Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo1Pos);
-      //servo01.writeMicroseconds(1500); // 1000 a 2000 
+      //servo01.writeMicroseconds(1500); // 1000 a 2000
 
       // We use for loops so we can control the speed of the servo
       // If previous position is bigger then current position
       if (servo1PPos > servo1Pos) {
         for ( int j = servo1PPos; j >= servo1Pos; j--) {   // Run servo down
           servo01.write(j);
-          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       } else  if (servo1PPos < servo1Pos) { // If previous position is smaller then current position
         for ( int j = servo1PPos; j <= servo1Pos; j++) {   // Run servo up
           servo01.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       }
       servo1PPos = servo1Pos;   // set current position as previous position
@@ -166,12 +176,22 @@ void fonctionI2C() {
       if (servo2PPos > servo2Pos) {
         for ( int j = servo2PPos; j >= servo2Pos; j--) {
           servo02.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       } else if (servo2PPos < servo2Pos) {
         for ( int j = servo2PPos; j <= servo2Pos; j++) {
           servo02.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       }
       servo2PPos = servo2Pos;
@@ -192,12 +212,22 @@ void fonctionI2C() {
       if (servo3PPos > servo3Pos) {
         for ( int j = servo3PPos; j >= servo3Pos; j--) {
           servo03.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       } else if (servo3PPos < servo3Pos) {
         for ( int j = servo3PPos; j <= servo3Pos; j++) {
           servo03.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       }
       servo3PPos = servo3Pos;
@@ -218,12 +248,22 @@ void fonctionI2C() {
       if (servo4PPos > servo4Pos) {
         for ( int j = servo4PPos; j >= servo4Pos; j--) {
           servo04.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       } else if (servo4PPos < servo4Pos) {
         for ( int j = servo4PPos; j <= servo4Pos; j++) {
           servo04.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       }
       servo4PPos = servo4Pos;
@@ -244,12 +284,22 @@ void fonctionI2C() {
       if (servo5PPos > servo5Pos) {
         for ( int j = servo5PPos; j >= servo5Pos; j--) {
           servo05.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       } else if (servo5PPos < servo5Pos) {
         for ( int j = servo5PPos; j <= servo5Pos; j++) {
           servo05.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       }
       servo5PPos = servo5Pos;
@@ -270,12 +320,22 @@ void fonctionI2C() {
       if (servo6PPos > servo6Pos) {
         for ( int j = servo6PPos; j >= servo6Pos; j--) {
           servo06.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       } else if (servo6PPos < servo6Pos) {
         for ( int j = servo6PPos; j <= servo6Pos; j++) {
           servo06.write(j);
-          delayMicroseconds(speedServo);
+          for (int k = 0 ; k <= speedServo; k++) {
+            for (int l = 0 ; l <= speedServo; l++) {
+              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+            }
+            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
+          }
         }
       }
       servo6PPos = servo6Pos;
@@ -295,12 +355,26 @@ void fonctionI2C() {
     }
     // If button "RESET" is pressed
     if (message[0] == 82 and message[1] == 69 and message[2] == 83 and message[3] == 69 and message[4] == 84) { // RESET
-      memset(servo01SP, 0, sizeof(servo01SP)); // Clear the array data to 0
-      memset(servo02SP, 0, sizeof(servo02SP));
-      memset(servo03SP, 0, sizeof(servo03SP));
-      memset(servo04SP, 0, sizeof(servo04SP));
-      memset(servo05SP, 0, sizeof(servo05SP));
-      memset(servo06SP, 0, sizeof(servo06SP));
+      servo1PPos = PP_WAIST;  // Robot arm initial position
+      servo01.write(servo1PPos);
+      servo2PPos = PP_SHOULDER; // Robot arm initial position
+      servo02.write(servo2PPos);
+      servo3PPos = PP_ELBOW; // Robot arm initial position
+      servo03.write(servo3PPos);
+      servo4PPos = PP_WRIST_ROLL; // Robot arm initial position
+      servo04.write(servo4PPos);
+      servo5PPos = PP_WRIST_PITCH;// Robot arm initial position
+      servo05.write(servo5PPos);
+      servo6PPos = PP_GRIPPER;// Robot arm initial position
+      servo06.write(servo6PPos);
+      /*
+        memset(servo01SP, 0, sizeof(servo01SP)); // Clear the array data to 0
+        memset(servo02SP, 0, sizeof(servo02SP));
+        memset(servo03SP, 0, sizeof(servo03SP));
+        memset(servo04SP, 0, sizeof(servo04SP));
+        memset(servo05SP, 0, sizeof(servo05SP));
+        memset(servo06SP, 0, sizeof(servo06SP));
+      */
       index = 0;  // Index to 0
     }
   }
