@@ -29,8 +29,8 @@
        Wire.requestFrom(I2C_SLAVE_ADDRESS_CONVOYEUR, 1);  // lecture de la valeur en retour
        while (Wire.available())  {                        // attente des octets i2c
        char c = Wire.read();
-       if ( c == 1 ) {        }
-       else {   }
+       if ( c == 1 ) {  objet   absent   }
+       else { objet present  }
 
   mv(xx) pour choisir la vitesse du convoyeur ( de 6 a 16 maxi) (8 au démarrage)
    ex:  values = "mv6"; // envoi de 6
