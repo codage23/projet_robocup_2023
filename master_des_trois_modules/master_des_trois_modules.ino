@@ -40,6 +40,9 @@ void setup()
   // Initialise la library Wire et se connecte au bus I2C en tant que master
   Wire.begin();
 
+  values = "mv10";
+  SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);
+
 }
 
 //=====
@@ -49,6 +52,20 @@ void setup()
 // Le programme principal s’execute par une boucle infinie appelee loop()
 // ---------------------------------------------------------------------------
 void loop() {
-
-
+  //delay(1000);
+  values = "sc";  // demande etat objet sur le convoyeur
+  SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);    // envoi i2c
+  Wire.requestFrom(I2C_SLAVE_ADDRESS_CONVOYEUR, 1);  // lecture de la valeur en retour
+  while (Wire.available())  {                        // attente des octets i2c
+    char c = Wire.read();
+    if ( c == 1 ) {
+      Serial.println("objet absent ");
+      values = "START";
+      SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);
+    } else {
+      Serial.println("objet present ");
+      values = "STOP";
+      SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);
+    }
+  }
 }

@@ -150,7 +150,7 @@ void receiveEvents() {
     //Serial.println(taille);
     char dataInS[taille];
 
-    // demande couleur  pc(x)
+    // demande couleur  pc
     if (message[0] == 112 and message[1] == 99) { // p et c
       requestI2C = 1; // demande du master i2c
       //Serial.println(requestI2C);
