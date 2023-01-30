@@ -55,7 +55,7 @@ int speedDelay = 20;
 int index = 0;
 String dataIn = "";
 int dataI2C = 0;
-int speedServo = 100;
+int speedServo = 500;
 
 const unsigned int MAX_MESSAGE_LENGTH = 32;
 static char message[MAX_MESSAGE_LENGTH]; // longueur maxi du message I2C

@@ -3,7 +3,7 @@
 //========================================================
 #define SERIAL_BAUD 9600   // vitesse moniteur serie
 #define SerialMonitor   1
-#define debug 1  // true for use Display log message if True
+#define DEBUG 0  // true for use Display log message if True
 
 //========================================================
 // Differentes fonctions du programme

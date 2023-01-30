@@ -142,55 +142,7 @@
 
    delay(3000);
 
-   // sequence
-   // WAIST
-   values = "s190";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // SHOULDER
-   values = "s2140";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // ELBOW
-   values = "s3150";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // WRIST_ROLL
-   values = "s4100";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // WRIST_PITCH
-   values = "s580";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // GRIPPER
-   values = "s670";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // ELBOW
-   values = "s380";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // WAIST
-   values = "s1120";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // GRIPPER
-   values = "s6100";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // WAIST
-   values = "s10";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // WAIST
-   values = "s1180";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
-   // WAIST
-   values = "s190";
-   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-   delay(1000);
+   
 
    nbTour = 0;
   }

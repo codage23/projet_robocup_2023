@@ -117,6 +117,7 @@ void fonctionI2C() {
     Serial.println("");
     //int taille = sizeof(message); // taille du tableau
     int taille = strlen(message); // taille de la chaine
+    Serial.print("taille du message : ");
     Serial.println(taille);
     char dataInS[taille];
 
@@ -129,7 +130,7 @@ void fonctionI2C() {
       }
       servo1Pos = atoi(dataInS); // char to int
 
-      Serial.println(servo1Pos);
+      Serial.print("servo 1 position : ");
       servo1Pos = map(servo1Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo1Pos);
       //servo01.writeMicroseconds(1500); // 1000 a 2000
@@ -138,23 +139,13 @@ void fonctionI2C() {
       // If previous position is bigger then current position
       if (servo1PPos > servo1Pos) {
         for ( int j = servo1PPos; j >= servo1Pos; j--) {   // Run servo down
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo01.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       } else  if (servo1PPos < servo1Pos) { // If previous position is smaller then current position
         for ( int j = servo1PPos; j <= servo1Pos; j++) {   // Run servo up
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo01.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       }
       servo1PPos = servo1Pos;   // set current position as previous position
@@ -169,29 +160,19 @@ void fonctionI2C() {
       }
       servo2Pos = atoi(dataInS); // char to int
 
-      Serial.println(servo2Pos);
+      Serial.print("servo 2 position : ");
       servo2Pos = map(servo2Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo2Pos);
 
       if (servo2PPos > servo2Pos) {
         for ( int j = servo2PPos; j >= servo2Pos; j--) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo02.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       } else if (servo2PPos < servo2Pos) {
         for ( int j = servo2PPos; j <= servo2Pos; j++) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo02.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       }
       servo2PPos = servo2Pos;
@@ -205,29 +186,19 @@ void fonctionI2C() {
       }
       servo3Pos = atoi(dataInS); // char to int
 
-      Serial.println(servo3Pos);
+      Serial.print("servo 3 position : ");
       servo3Pos = map(servo3Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo3Pos);
 
       if (servo3PPos > servo3Pos) {
         for ( int j = servo3PPos; j >= servo3Pos; j--) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo03.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       } else if (servo3PPos < servo3Pos) {
         for ( int j = servo3PPos; j <= servo3Pos; j++) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo03.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       }
       servo3PPos = servo3Pos;
@@ -241,29 +212,19 @@ void fonctionI2C() {
       }
       servo4Pos = atoi(dataInS); // char to int
 
-      Serial.println(servo4Pos);
+      Serial.print("servo 4 position : ");
       servo4Pos = map(servo4Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo4Pos);
 
       if (servo4PPos > servo4Pos) {
         for ( int j = servo4PPos; j >= servo4Pos; j--) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo04.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       } else if (servo4PPos < servo4Pos) {
         for ( int j = servo4PPos; j <= servo4Pos; j++) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo04.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       }
       servo4PPos = servo4Pos;
@@ -277,29 +238,19 @@ void fonctionI2C() {
       }
       servo5Pos = atoi(dataInS); // char to int
 
-      Serial.println(servo5Pos);
+      Serial.print("servo 5 position : ");
       servo5Pos = map(servo5Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo5Pos);
 
       if (servo5PPos > servo5Pos) {
         for ( int j = servo5PPos; j >= servo5Pos; j--) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo05.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       } else if (servo5PPos < servo5Pos) {
         for ( int j = servo5PPos; j <= servo5Pos; j++) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo05.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       }
       servo5PPos = servo5Pos;
@@ -313,29 +264,19 @@ void fonctionI2C() {
       }
       servo6Pos = atoi(dataInS); // char to int
 
-      Serial.println(servo6Pos);
+      Serial.print("servo 6 position : ");
       servo6Pos = map(servo6Pos, 0, 180, 0, 180); //utilisation de map pour limiter l'ouverture du servo
       Serial.println(servo6Pos);
 
       if (servo6PPos > servo6Pos) {
         for ( int j = servo6PPos; j >= servo6Pos; j--) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo06.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       } else if (servo6PPos < servo6Pos) {
         for ( int j = servo6PPos; j <= servo6Pos; j++) {
+          delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
           servo06.write(j);
-          for (int k = 0 ; k <= speedServo; k++) {
-            for (int l = 0 ; l <= speedServo; l++) {
-              //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-            }
-            //delayMicroseconds(speedServo);    // defines the speed at which the servo rotates
-          }
         }
       }
       servo6PPos = servo6Pos;

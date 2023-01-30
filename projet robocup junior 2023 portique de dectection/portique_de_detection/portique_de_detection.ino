@@ -39,9 +39,13 @@ void getFrequency() {
   // redColor = map(redFrequency, XX, XX, 255,0);
   frequencyRed = pulseIn(sensorOut, LOW);
   red_value = map(frequencyRed, 20, 130, 255, 0);
-  Serial.print("Rouge = ");
-  Serial.print(frequencyRed);
-  Serial.print("  ");
+  if (DEBUG) {
+    Serial.print("Rouge = ");
+    Serial.print(frequencyRed);
+    Serial.print("   ");
+    Serial.print(red_value);
+    Serial.print("  ");
+  }
 
   delay(100);
   digitalWrite(S2, HIGH);
@@ -53,9 +57,13 @@ void getFrequency() {
   // greenColor = map(greenFrequency, XX, XX, 255, 0);
   frequencyGreen = pulseIn(sensorOut, LOW);
   green_value = map(frequencyGreen, 30, 150, 255, 0);
-  Serial.print("Verte= ");
-  Serial.print(frequencyGreen);
-  Serial.print("  ");
+  if (DEBUG) {
+    Serial.print("Verte= ");
+    Serial.print(frequencyGreen);
+    Serial.print("   ");
+    Serial.print(green_value);
+    Serial.print("  ");
+  }
 
   delay(100);
   digitalWrite(S2, LOW);
@@ -67,20 +75,26 @@ void getFrequency() {
   // blueColor = map(blueFrequency, XX, XX, 255, 0);
   frequencyBlue = pulseIn(sensorOut, LOW);
   blue_value = map(frequencyBlue, 20, 130, 255, 0);
-  Serial.print("Bleu= ");
-  Serial.print(frequencyBlue);
-  Serial.print("  ");
-  delay(100);
+  if (DEBUG) {
+    Serial.print("Bleu= ");
+    Serial.print(frequencyBlue);
+    Serial.print("   ");
+    Serial.print(blue_value);
+    Serial.print("  ");
+    delay(100);
+  }
 }
 
 int checkColor() {
   if ((red_value > green_value) && (red_value > blue_value) && (frequencyRed < 130)) {
-    Serial.print(red_value);
-    Serial.print("  ");
-    Serial.print(green_value);
-    Serial.print("  ");
-    Serial.print(blue_value);
-    Serial.println(" RED detected!");
+    if (DEBUG) {
+      Serial.print(red_value);
+      Serial.print("  ");
+      Serial.print(green_value);
+      Serial.print("  ");
+      Serial.print(blue_value);
+      Serial.println(" RED detected!");
+    }
     digitalWrite(ledRed, HIGH);
     digitalWrite(ledGreen, LOW);
     digitalWrite(ledBlue, LOW);
@@ -88,12 +102,14 @@ int checkColor() {
     couleur = 1; // rouge
 
   } else  if ((green_value > red_value) && (green_value > blue_value) && (frequencyGreen < 150)) {
-    Serial.print(red_value);
-    Serial.print("  ");
-    Serial.print(green_value);
-    Serial.print("  ");
-    Serial.print(blue_value);
-    Serial.println(" GREEN detected!");
+    if (DEBUG) {
+      Serial.print(red_value);
+      Serial.print("  ");
+      Serial.print(green_value);
+      Serial.print("  ");
+      Serial.print(blue_value);
+      Serial.println(" GREEN detected!");
+    }
     digitalWrite(ledRed, LOW);
     digitalWrite(ledGreen, HIGH);
     digitalWrite(ledBlue, LOW);
@@ -101,12 +117,14 @@ int checkColor() {
     couleur = 2; // verte
 
   } else  if ((blue_value > red_value) && (blue_value > green_value) && (frequencyBlue < 130)) {
-    Serial.print(red_value);
-    Serial.print("  ");
-    Serial.print(green_value);
-    Serial.print("  ");
-    Serial.print(blue_value);
-    Serial.println(" BLUE detected!");
+    if (DEBUG) {
+      Serial.print(red_value);
+      Serial.print("  ");
+      Serial.print(green_value);
+      Serial.print("  ");
+      Serial.print(blue_value);
+      Serial.println(" BLUE detected!");
+    }
     digitalWrite(ledRed, LOW);
     digitalWrite(ledGreen, LOW);
     digitalWrite(ledBlue, HIGH);
