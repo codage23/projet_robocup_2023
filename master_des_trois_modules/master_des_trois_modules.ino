@@ -40,10 +40,10 @@ void setup()   {
 
   // Initialise la library Wire et se connecte au bus I2C en tant que master
   Wire.begin();
-  /*
-    values = "mv10";
-    SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);
-  */
+ 
+    values = "mv14";                                 // vitesse du convoyeur a 14
+    SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);  // commande envoyee i2c
+    
 }
 
 //=====
@@ -55,25 +55,25 @@ void setup()   {
 void loop() {
 
   values = "pc";  // demande couleur
-  SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE);    // envoi i2c
+  SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE);    // commande envoiyee i2c
   Wire.requestFrom(I2C_SLAVE_ADDRESS_PORTIQUE, 1);  // lecture de la valeur en retour
-  if (Wire.available())  {                       // attente des octets i2c
+  if (Wire.available())  {                          // attente des octets i2c
     char c = Wire.read();
-    if ( c == 1 ) {  // rouge
+    if ( c == 1 ) {     // couleur rouge detectee
       values = "pl10";  // led rouge
-      SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE); // envoi i2c
+      SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE); // commande envoiyee i2c
       couleur = 10;
-    } else if (c == 2) {  // verte
-      values = "pl20";  // led verte
-      SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE); // envoi i2c
+    } else if (c == 2) {  // couleur verte detectee
+      values = "pl20";    // led verte
+      SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE); // commande envoiyee i2c
       couleur = 20;
-    } else if (c == 3) { // bleue
-      values = "pl30";  // led bleue
-      SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE); // envoi i2c
+    } else if (c == 3) {  // couleur bleue detectee
+      values = "pl30";    // led bleue
+      SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE); // commande envoiyee i2c
       couleur = 30;
-    } else { // aucune couleur de detectee
-      values = "pl00";  // eteinte
-      SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE); // envoi i2c
+    } else {              // aucune couleur de detectee
+      values = "pl00";    // led eteinte
+      SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE); // commande envoiyee i2c
       couleur = 0;
     }
   }
@@ -81,43 +81,48 @@ void loop() {
   delay(300);
 
   values = "sc";  // demande etat objet sur le convoyeur
-  SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);    // envoi i2c
+  SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);    // envoi i2cI2C_SLAVE_ADDRESS_PORTIQUE
   Wire.requestFrom(I2C_SLAVE_ADDRESS_CONVOYEUR, 1);  // lecture de la valeur en retour
-  if (Wire.available())  {                        // attente des octets i2c
+  if (Wire.available())  {                           // attente des octets i2c
     char c = Wire.read();
-    if ( c == 1 ) {
+    if ( c == 1 ) {                                  // pas d'objet en attente sur le convoyeur 
       Serial.println("objet absent ");
-      values = "START";
-      SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);
+      values = "START";I2C_SLAVE_ADDRESS_PORTIQUE;    // commande START
+      SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR); // commande envoiyee i2c
     } else {
       Serial.println("objet present ");
       values = "STOP";
-      SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR);
-      if (couleur == 10) {  // rouge
-        reposBras();       // mise au repos du bras
-        delay(1000);
+      SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR); // commande envoiyee i2c
+      if (couleur == 10) {  // couleur rouge
         positionAttente(); // position attente
         delay(1000);
-        sequenceRouge();   // objet rouge
+        attraper();
         delay(1000);
-        positionAttente(); // position attente
+        values = "s1180";  // tourne pour objet rouge
+        SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoiyee i2c
+        delay(1000);   
+        relacher(); // position attente
         delay(1000);
       } else if (couleur == 20) {  // couleur verte
-        reposBras();  // mise au repos du bras
-        delay(1000);
         positionAttente(); // position attente
         delay(1000);
-        sequenceVerte();  // objet verte
+        attraper();
         delay(1000);
+        values = "s1135";  // tourne pour objet vert
+        SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoiyee i2c
+        delay(1000);
+        relacher(); // position attente
+        delay(1000); 
+      } else if (couleur == 30) { // couleur bleue
         positionAttente(); // position attente
-      } else if (couleur == 30) {
-        reposBras();  // mise au repos du bras
         delay(1000);
-        positionAttente(); // position attente
+        attraper();
         delay(1000);
-        sequenceBleue();  // objet verte
+        values = "s1165";  // tourne pour objet bleu
+        SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoiyee i2c
         delay(1000);
-        positionAttente(); // position attente
+        relacher(); // position attente
+        delay(1000);
       } else {
       // couleur = 0
       }

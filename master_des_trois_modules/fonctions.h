@@ -81,7 +81,7 @@ void positionAttente() {
    SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
    delay(300); 
    // WRIST_PITCH
-   values = "s560";
+   values = "s570";
    SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
    delay(300);
 }
@@ -174,4 +174,59 @@ void sequenceBleue() {
     values = "s190";
     SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
     delay(1000);
+}
+
+void attraper() {
+  #define I2C_SLAVE_ADDRESS_BRAS  11
+  char* values ;
+    values = "s3105"; // abaisser le bras s3 = on va mettre la variable values a s3=105
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS); // envoie de la variable
+    delay(1000);
+    // fermer la pince : s6 fermeture 60
+    values = "s660";
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS); // envoie de la variable
+    delay(1000);
+    values = "s380";
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
+    delay(1000);    
+  
+}
+
+void couleur_rouge() {
+  #define I2C_SLAVE_ADDRESS_BRAS  11
+  char* values ;
+    values = "s1105";
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
+    delay(1000);
+  
+}
+
+void couleur_vert() {
+  #define I2C_SLAVE_ADDRESS_BRAS  11
+  char* values ;
+    values = "s1135";
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
+    delay(1000);
+  
+}
+
+void couleur_bleu() {
+  #define I2C_SLAVE_ADDRESS_BRAS  11
+  char* values ;
+    values = "s1165";
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
+    delay(1000);
+  
+}
+
+
+void relacher()  {
+  #define I2C_SLAVE_ADDRESS_BRAS  11
+  char* values ;
+    // ouvrir la pince : s6 ouverture 100
+    values = "s6100";
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS); // envoie de la variable
+    delay(1000);
+      
+    
 }
