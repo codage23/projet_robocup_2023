@@ -101,7 +101,7 @@ int checkColor() {
 
     couleur = 1; // rouge
 
-  } else  if ((green_value > red_value) && (green_value > blue_value) && (frequencyGreen < 150)) {
+  } else  if ((green_value > red_value) && (green_value > blue_value) && (frequencyGreen < 150)&& (frequencyGreen > 90)) {
     if (DEBUG) {
       Serial.print(red_value);
       Serial.print("  ");
@@ -116,7 +116,7 @@ int checkColor() {
 
     couleur = 2; // verte
 
-  } else  if ((blue_value > red_value) && (blue_value > green_value) && (frequencyBlue < 130)) {
+  } else  if ((blue_value > red_value) && (blue_value > green_value) && (frequencyBlue < 90)) {
     if (DEBUG) {
       Serial.print(red_value);
       Serial.print("  ");
