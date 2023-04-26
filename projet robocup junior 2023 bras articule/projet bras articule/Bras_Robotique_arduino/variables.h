@@ -65,8 +65,8 @@ static char message[MAX_MESSAGE_LENGTH]; // longueur maxi du message I2C
 // Robot arm initial position
 //===========================
 #define PP_WAIST 90
-#define PP_SHOULDER 180
-#define PP_ELBOW 100
+#define PP_SHOULDER 150
+#define PP_ELBOW 120
 #define PP_WRIST_ROLL 100
 #define PP_WRIST_PITCH 70
 #define PP_GRIPPER 100
