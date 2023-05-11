@@ -64,16 +64,17 @@ void positionAttente() {
   values = "s6120";
   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
   delay(500);
-  // WAIST
-  values = "s110";
-  SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-  delay(500);
+
   // SHOULDER
   values = "s2160";
   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
   delay(500);
   // ELBOW
-  values = "s380";
+  values = "s3120";
+  SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
+  delay(500);
+  // WAIST
+  values = "s110";
   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
   delay(500);
   // WRIST_ROLL
@@ -89,25 +90,41 @@ void positionAttente() {
 void attraper() {
 #define I2C_SLAVE_ADDRESS_BRAS  11
   char* values ;
-  values = "s5120";  // relever la pince
+  values = "s5100";  // relever la pince
   SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoiyee i2c
-  delay(2000);
-  values = "s3140"; // abaisser le bras s3 = on va mettre la variable values a s3=105
+  delay(500);
+  values = "s3125"; // abaisser le bras s3 = on va mettre la variable values a s3=105
   SendValue(values, I2C_SLAVE_ADDRESS_BRAS); // envoie de la variable
-  delay(2000);
-  values = "s2160"; // abaisser le bras s3 = on va mettre la variable values a s3=105
+  delay(500);
+  values = "s2109"; // abaisser le bras s3 = on va mettre la variable values a s3=105
   SendValue(values, I2C_SLAVE_ADDRESS_BRAS); // envoie de la variable
-  delay(2000);
-  // fermer la pince : s6 fermeture 60
+  delay(500);
   values = "s662";
   SendValue(values, I2C_SLAVE_ADDRESS_BRAS); // envoie de la variable
-  delay(1000);
-  values = "s3110";
-  SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-  delay(1000);
-  values = "s380";
-  SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
-  delay(2000);
+  delay(500);
+  values = "s3100";  SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
+  delay(500);
+  /*
+    values = "s5100";  // relever la pince
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoiyee i2c
+    delay(500);
+    values = "s3140"; // abaisser le bras s3 = on va mettre la variable values a s3=105
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS); // envoie de la variable
+    delay(500);
+    values = "s2130"; // abaisser le bras s3 = on va mettre la variable values a s3=105
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS); // envoie de la variable
+    delay(500);
+    // fermer la pince : s6 fermeture 60
+    values = "s662";
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS); // envoie de la variable
+    delay(500);
+    values = "s3130";
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
+    delay(500);
+    values = "s380";
+    SendValue(values, I2C_SLAVE_ADDRESS_BRAS);
+    delay(500);
+  */
 }
 
 void relacher()  {

@@ -93,82 +93,79 @@ void loop() {
       SendValue(values, I2C_SLAVE_ADDRESS_CONVOYEUR); // commande envoyee i2c
       if (couleur == 10) {    // couleur rouge
         positionAttente();    // fonction attente
-        delay(1000);
+        delay(500);
         attraper();           // fonction attraper
-        delay(1000);
+        delay(500);
         values = "s1130";     // taille position 130
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         values = "s3130";     // coude position 130
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         relacher();           // fonction relacher
-        delay(1000);
-        values = "s380";      // coude position 80
+        delay(500);
+        values = "s3130";      // coude position 80
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         positionAttente();     // fonction attente
         delay(1000);
       } else if (couleur == 20) {  // couleur verte
         positionAttente();         // fonction attente
-        delay(1000);
+        delay(500);
         attraper();                // fonction attraper
-        delay(1000);
+        delay(500);
         values = "s175";           // taille position 75
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         values = "s3130";           // coude position 130
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         relacher();                 // fonction relacher
-        delay(1000);
-        values = "s380";            // coude position 80
+        delay(500);
+        values = "s3130";            // coude position 80
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         positionAttente();          // fonction attente
-        delay(1000);
+        delay(500);
       } else if (couleur == 30) { // couleur bleue
         positionAttente();        // fonction attente
-        delay(1000);
+        delay(500);
         attraper();               // fonction attraper
-        delay(1000);
+        delay(500);
         values = "s1100";         // taille position 100
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
-        values = "s2170";         // epaule position 170
-        SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         values = "s3140";         // coude position 140
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         relacher();               // fonction relacher
-        delay(1000);
-        values = "s380";          // coude position 80
+        delay(500);
+        values = "s3130";          // coude position 80
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         positionAttente();        // fonction attente
-        delay(1000);
-      } else {              // couleur = 0, donc un objet present mais la couleur n'est pas reconnue        
+        delay(500);
+      } else {              // couleur = 0, donc un objet present mais la couleur n'est pas reconnue
         positionAttente();  // fonction attente
-        delay(1000);
+        delay(500);
         attraper();         // fonction attraper
-        delay(1000);
+        delay(500);
         values = "s1160";    // taille position 160
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
-        values = "s2170";   // epaule position 170
+        delay(500);
+        values = "s2120";   // epaule position 170
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         values = "s3140";   // coude position 140
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         relacher();         // fonction relacher
-        delay(1000);
-        values = "s380";    // coude position 80
+        delay(500);
+        values = "s3130";    // coude position 80
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
-        delay(1000);
+        delay(500);
         positionAttente();  // fonction attente
-        delay(1000);
+        delay(500);
       }
     }
   }

@@ -1,7 +1,7 @@
 //==========
 // Controls
 //==========
-#define SERIAL_BAUD 9600   // vitesse moniteur serie
+#define SERIAL_BAUD 115200   // vitesse moniteur serie
 
 
 char* values ;
