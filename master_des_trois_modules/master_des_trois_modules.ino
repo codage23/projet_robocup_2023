@@ -108,7 +108,9 @@ void loop() {
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
         delay(500);
         positionAttente();     // fonction attente
-        delay(1000);
+         values = "RESET";
+        SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE);  // commande envoyee i2c
+        delay(500);
       } else if (couleur == 20) {  // couleur verte
         positionAttente();         // fonction attente
         delay(500);
@@ -126,6 +128,8 @@ void loop() {
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
         delay(500);
         positionAttente();          // fonction attente
+         values = "RESET";
+        SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE);  // commande envoyee i2c
         delay(500);
       } else if (couleur == 30) { // couleur bleue
         positionAttente();        // fonction attente
@@ -144,6 +148,8 @@ void loop() {
         SendValue(values, I2C_SLAVE_ADDRESS_BRAS);    // commande envoyee i2c
         delay(500);
         positionAttente();        // fonction attente
+         values = "RESET";
+        SendValue(values, I2C_SLAVE_ADDRESS_PORTIQUE);  // commande envoyee i2c
         delay(500);
       } else {              // couleur = 0, donc un objet present mais la couleur n'est pas reconnue
         positionAttente();  // fonction attente
